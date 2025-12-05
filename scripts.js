@@ -28,10 +28,10 @@
         document.getElementById('googleCalendar').addEventListener('click', function(e) {
             e.preventDefault();
             const title = encodeURIComponent('XV Años de Karol Dariana');
-            const details = encodeURIComponent('Celebración de XV años');
+            const details = encodeURIComponent('Celebración de XV años de Karol');
             const location = encodeURIComponent('El Olvido');
-            const startDate = '20260315T180000Z';
-            const endDate = '20260316T030000Z';
+            const startDate = '20251227T150000';
+            const endDate = '20251227T220000';
             
             const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startDate}/${endDate}`;
             window.open(googleUrl, '_blank');
@@ -45,8 +45,8 @@ BEGIN:VEVENT
 SUMMARY:XV Años de Karol Dariana
 DESCRIPTION:Celebración de XV años
 LOCATION:Salón ---- El Olvido
-DTSTART:20260315T180000Z
-DTEND:20260316T030000Z
+DTSTART:20251227T150000
+DTEND:20251227T220000
 END:VEVENT
 END:VCALENDAR`;
             
