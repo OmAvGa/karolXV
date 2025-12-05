@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Karol Dariana</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="img/fondo.jpeg" alt="Portada"
+            class="hero-video">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Karol Dariana</h1>
+            <p>Mis XV Años</p>
+            <p style="font-size: 1.2rem;">27 de Diciembre, 2025</p>
+        </div>
+        <div class="scroll-indicator">
+            <p>↓</p>
+        </div>
+    </section>
+
+    <!-- Countdown -->
+    <section class="countdown">
+        <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Cuenta Regresiva</h2>
+        <p style="font-size: 1.2rem;">Faltan</p>
+        <div class="countdown-timer" id="countdown">
+            <div class="countdown-item">
+                <span class="countdown-number" id="days">0</span>
+                <span class="countdown-label">Días</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="hours">0</span>
+                <span class="countdown-label">Horas</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="minutes">0</span>
+                <span class="countdown-label">Minutos</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="seconds">0</span>
+                <span class="countdown-label">Segundos</span>
+            </div>
+        </div>
+        <div class="calendar-buttons">
+            <a href="#" class="btn btn-secondary" id="googleCalendar">📅 Google Calendar</a>
+            <a href="#" class="btn btn-secondary" id="appleCalendar">🍎 Apple Calendar</a>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="story">
+        <h2 class="section-title">Nuestra Historia</h2>
+        <div class="story-content">
+            <div>
+                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&h=600&fit=crop"
+                    alt="Historia" class="story-image">
+            </div>
+            <div class="story-text">
+                <p>Hace quince años comenzó una historia llena de amor, sueños y esperanza. Cada momento ha sido un
+                    regalo, cada sonrisa una bendición.</p>
+                <p style="margin-top: 20px;">Hoy celebramos no solo un cumpleaños, sino el inicio de una nueva etapa
+                    llena de promesas y aventuras. Gracias por ser parte de este viaje maravilloso.</p>
+                <p style="margin-top: 20px;">Los invito a compartir conmigo este día tan especial, rodeados de amor,
+                    música y alegría.</p>
+            </div>
+        </div>
+        <div class="story-content" style="direction: rtl;">
+            <div style="direction: ltr;">
+                <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&h=600&fit=crop"
+                    alt="Familia" class="story-image">
+            </div>
+            <div class="story-text" style="direction: ltr;">
+                <p>Con el apoyo incondicional de mi familia, he crecido rodeada de valores, cariño y las mejores
+                    enseñanzas.</p>
+                <p style="margin-top: 20px;">Este día representa el amor de quienes me han acompañado en cada paso, y
+                    quiero celebrarlo con todos ustedes, las personas que hacen mi vida más especial.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery">
+        <h2 class="section-title">Galería de Recuerdos</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img
+                    src="https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400&h=400&fit=crop"
+                    alt="Foto 1"></div>
+            <div class="gallery-item"><img
+                    src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=400&h=400&fit=crop"
+                    alt="Foto 2"></div>
+            <div class="gallery-item"><img
+                    src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop"
+                    alt="Foto 3"></div>
+            <div class="gallery-item"><img
+                    src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400&h=400&fit=crop"
+                    alt="Foto 4"></div>
+            <div class="gallery-item"><img
+                    src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&h=400&fit=crop"
+                    alt="Foto 5"></div>
+            <div class="gallery-item"><img
+                    src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop"
+                    alt="Foto 6"></div>
+        </div>
+    </section>
+
+    <!-- Location -->
+    <section class="location">
+        <h2 class="section-title">Ubicación</h2>
+        <div class="location-container">
+            <div class="location-card">
+                <h3>⛪ Misa</h3>
+                <div class="location-details">
+                    <p><strong>Parroquia de Nuestra Señora del Rosario</strong></p>
+                    <p>Porfirio Díaz 26, Centro, 47900 Jamay, Jal.</p>
+                    <p>📅 27 de Diciembre, 2025</p>
+                    <p>🕐 6:00 PM</p>
+                </div>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7484.467703199077!2d-102.7123671107261!3d20.290585367262487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842eddd4febf76c7%3A0xce7a2ca62618ae9!2sParroqu%C3%ADa%20de%20Nuestra%20Se%C3%B1ora%20del%20Rosario!5e0!3m2!1ses-419!2smx!4v1761735814794!5m2!1ses-419!2smx"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <a href="https://maps.app.goo.gl/VmALeQqJGamFeuCk6" class="btn btn-primary"
+                    style="margin-top: 15px;">🗺️ Cómo llegar</a>
+            </div>
+            <div class="location-card">
+                <h3>🎉 Fiesta</h3>
+                <div class="location-details">
+                    <p><strong>El Olvido</strong></p>
+                    <p>Jamay - La Barca 20, 47900 Jamay, Jal.</p>
+                    <p>📅 27 de Diciembre, 2025</p>
+                    <p>🕗 8:00 PM</p>
+                </div>
+                <div class="map-container">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7484.310572293039!2d-102.69052640212215!3d20.293838575165996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842eddb2e3b9a5b3%3A0x9d6695b0a1f9bcbb!2sEl%20Olvido!5e0!3m2!1ses-419!2smx!4v1761735717718!5m2!1ses-419!2smx"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <a href="https://maps.app.goo.gl/dQshLzTemjxZrYyEA" class="btn btn-primary"
+                    style="margin-top: 15px;">🗺️ Cómo llegar</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities -->
+    <section class="amenities">
+        <h2 class="section-title">Información Importante</h2>
+        <div class="amenities-grid">
+            <div class="amenity-item">
+                <div class="amenity-icon">👗</div>
+                <div class="amenity-title">Código de Vestimenta</div>
+                <div class="amenity-description">Formal / Etiqueta</div>
+            </div>
+            <div class="amenity-item">
+                <div class="amenity-icon">⏰</div>
+                <div class="amenity-title">Puntualidad</div>
+                <div class="amenity-description">Por favor llega a tiempo</div>
+            </div>
+            <div class="amenity-item">
+                <div class="amenity-icon">📸</div>
+                <div class="amenity-title">Zona de Fotos</div>
+                <div class="amenity-description">Cabina 3D disponible</div>
+            </div>
+            <div class="amenity-item">
+                <div class="amenity-icon">🍽️</div>
+                <div class="amenity-title">Cena y Baile</div>
+                <div class="amenity-description">Menú completo incluido</div>
+            </div>
+            <div class="amenity-item">
+                <div class="amenity-icon">🚗</div>
+                <div class="amenity-title">Estacionamiento</div>
+                <div class="amenity-description">Valet parking disponible</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram -->
+    <section class="instagram">
+        <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Comparte tu Experiencia</h2>
+        <p style="font-size: 1.2rem;">Usa nuestro hashtag oficial</p>
+        <div class="hashtag">#KarolXV</div>
+        <p style="font-size: 1rem;">¡Queremos ver tus fotos y videos del evento!</p>
+    </section>
+
+    <!-- RSVP -->
+    <section class="rsvp">
+        <h2 class="section-title">Confirmación de Asistencia</h2>
+        <form class="rsvp-form" id="rsvpForm">
+            <div class="success-message" id="successMessage">¡Gracias por confirmar tu asistencia!</div>
+            <div class="form-group">
+                <label for="name">Nombre completo *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Teléfono *</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="guests">Número de acompañantes</label>
+                <input type="number" id="guests" name="guests" min="0" max="5" value="0">
+            </div>
+            <div class="form-group">
+                <label for="dietary">Restricciones alimentarias</label>
+                <textarea id="dietary" name="dietary" placeholder="Vegetariano, alérgico a..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Confirmar Asistencia</button>
+        </form>
+    </section>
+
+    <!-- Guestbook -->
+    <section class="guestbook">
+        <h2 class="section-title">Libro de Felicitaciones</h2>
+        <form class="guestbook-form" id="guestbookForm">
+            <div class="form-group">
+                <label for="guestName">Tu nombre *</label>
+                <input type="text" id="guestName" name="guestName" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Tu mensaje *</label>
+                <textarea id="message" name="message" required placeholder="Escribe tus mejores deseos..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar Felicitación</button>
+        </form>
+        <div class="messages-container" id="messagesContainer">
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p style="font-size: 1.2rem; margin-bottom: 10px;">Con amor ❤️, Karol Dariana</p>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
