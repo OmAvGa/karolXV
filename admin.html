@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - XV Años Karol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .section-title {
+            color: #d4a5d4;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .admin-login {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(212, 165, 212, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #d4a5d4;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 165, 212, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+
+        .rsvp-list {
+            margin-top: 20px;
+        }
+
+        .rsvp-item {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #d4a5d4;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .rsvp-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .rsvp-item h3 {
+            color: #d4a5d4;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .rsvp-detail {
+            color: #666;
+            margin: 8px 0;
+            padding: 3px 0;
+            line-height: 1.6;
+        }
+
+        .rsvp-detail strong {
+            color: #333;
+            min-width: 160px;
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #d4a5d4;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-section {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .export-buttons {
+                justify-content: center;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .rsvp-detail strong {
+                min-width: 120px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="admin-section">
+            <!-- Login -->
+            <div class="admin-login" id="adminLogin">
+                <h2 class="section-title">🔐 Panel de Administración</h2>
+                <p style="margin-bottom: 20px; color: #666;">XV Años de Karol Dariana</p>
+                <div class="error-message" id="loginError">Contraseña incorrecta</div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="Ingresa la contraseña">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" onclick="login()">Acceder</button>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-panel" id="adminPanel">
+                <div class="header-actions">
+                    <h2 class="section-title">📋 Lista de Confirmaciones</h2>
+                    <div class="export-buttons">
+                        <button class="btn btn-success" onclick="exportToPDF()">📄 Exportar PDF</button>
+                        <button class="btn btn-info" onclick="exportToExcel()">📊 Exportar Excel</button>
+                        <button class="btn btn-secondary" onclick="logout()">🚪 Cerrar Sesión</button>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalConfirmed">0</div>
+                        <div class="stat-label">Confirmaciones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalGuests">0</div>
+                        <div class="stat-label">Total de Personas</div>
+                    </div>
+                </div>
+
+                <div class="rsvp-list" id="rsvpList">
+                    <div class="loading">Cargando confirmaciones...</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "karol2025"; // 🔐 CAMBIA ESTA CONTRASEÑA
+        let rsvpData = [];
+
+        // Login
+        function login() {
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('loginError');
+            
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                errorMessage.style.display = 'none';
+                loadRSVPs();
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Logout
+        function logout() {
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('password').value = '';
+        }
+
+        // Cargar confirmaciones
+        async function loadRSVPs() {
+            try {
+                const result = await window.storage.list('rsvp:');
+                
+                if (!result || !result.keys || result.keys.length === 0) {
+                    document.getElementById('rsvpList').innerHTML = '<div class="empty-state">📭 No hay confirmaciones aún</div>';
+                    document.getElementById('totalConfirmed').textContent = '0';
+                    document.getElementById('totalGuests').textContent = '0';
+                    rsvpData = [];
+                    return;
+                }
+
+                let totalConfirmed = 0;
+                let totalPeople = 0;
+                let html = '';
+                rsvpData = [];
+
+                for (const key of result.keys) {
+                    try {
+                        const data = await window.storage.get(key);
+                        if (data && data.value) {
+                            const rsvp = JSON.parse(data.value);
+                            rsvpData.push(rsvp);
+                            totalConfirmed++;
+                            totalPeople += 1 + rsvp.guests;
+
+                            const date = new Date(rsvp.timestamp);
+                            const formattedDate = date.toLocaleDateString('es-MX', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+
+                            html += `
+                                <div class="rsvp-item">
+                                    <h3>👤 ${rsvp.name}</h3>
+                                    <div class="rsvp-detail"><strong>📞 Teléfono:</strong> ${rsvp.phone}</div>
+                                    <div class="rsvp-detail"><strong>👥 Acompañantes:</strong> ${rsvp.guests}</div>
+                                    <div class="rsvp-detail"><strong>✅ Total personas:</strong> ${1 + rsvp.guests}</div>
+                                    ${rsvp.dietary ? `<div class="rsvp-detail"><strong>🍽️ Restricciones:</strong> ${rsvp.dietary}</div>` : ''}
+                                    <div class="rsvp-detail" style="font-size: 0.9em; color: #999; margin-top: 10px;">
+                                        ⏰ Confirmado el ${formattedDate}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    } catch (error) {
+                        console.error('Error al cargar RSVP:', error);
+                    }
+                }
+
+                // Ordenar por fecha
+                rsvpData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                document.getElementById('totalConfirmed').textContent = totalConfirmed;
+                document.getElementById('totalGuests').textContent = totalPeople;
+                document.getElementById('rsvpList').innerHTML = html || '<div class="empty-state">📭 No hay confirmaciones aún</div>';
+
+            } catch (error) {
+                console.error('Error al cargar confirmaciones:', error);
+                document.getElementById('rsvpList').innerHTML = '<div class="empty-state">❌ Error al cargar las confirmaciones</div>';
+            }
+        }
+
+        // Exportar a PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Título
+            doc.setFontSize(22);
+            doc.text('XV Anos de Karol Dariana', 20, 20);
+            doc.setFontSize(16);
+            doc.text('Lista de Confirmaciones', 20, 30);
+            
+            doc.setFontSize(11);
+            const today = new Date().toLocaleDateString('es-MX', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            doc.text(`Generado: ${today}`, 20, 40);
+
+            // Estadísticas
+            doc.setFontSize(13);
+            doc.text(`Total confirmaciones: ${rsvpData.length}`, 20, 52);
+            const totalPeople = rsvpData.reduce((sum, r) => sum + 1 + r.guests, 0);
+            doc.text(`Total de personas: ${totalPeople}`, 20, 60);
+
+            // Lista
+            let yPos = 75;
+            doc.setFontSize(10);
+
+            rsvpData.forEach((rsvp, index) => {
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+
+                doc.setFontSize(12);
+                doc.text(`${index + 1}. ${rsvp.name}`, 20, yPos);
+                yPos += 6;
+                
+                doc.setFontSize(10);
+                doc.text(`Telefono: ${rsvp.phone}`, 25, yPos);
+                yPos += 5;
+                doc.text(`Acompanantes: ${rsvp.guests} | Total: ${1 + rsvp.guests} personas`, 25, yPos);
+                yPos += 5;
+                
+                if (rsvp.dietary) {
+                    doc.text(`Restricciones: ${rsvp.dietary}`, 25, yPos);
+                    yPos += 5;
+                }
+                
+                const date = new Date(rsvp.timestamp).toLocaleDateString('es-MX');
+                doc.text(`Confirmado: ${date}`, 25, yPos);
+                yPos += 12;
+            });
+
+            doc.save('confirmaciones-xv-karol.pdf');
+        }
+
+        // Exportar a Excel
+        function exportToExcel() {
+            const excelData = rsvpData.map((rsvp, index) => ({
+                'No.': index + 1,
+                'Nombre': rsvp.name,
+                'Teléfono': rsvp.phone,
+                'Acompañantes': rsvp.guests,
+                'Total Personas': 1 + rsvp.guests,
+                'Restricciones': rsvp.dietary || 'Ninguna',
+                'Fecha': new Date(rsvp.timestamp).toLocaleDateString('es-MX')
+            }));
+
+            // Totales
+            const totalPeople = rsvpData.reduce((sum, r) => sum + 1 + r.guests, 0);
+            excelData.push({
+                'No.': '',
+                'Nombre': 'TOTAL',
+                'Teléfono': '',
+                'Acompañantes': '',
+                'Total Personas': totalPeople,
+                'Restricciones': '',
+                'Fecha': ''
+            });
+
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            
+            // Ancho de columnas
+            ws['!cols'] = [
+                { wch: 5 },
+                { wch: 25 },
+                { wch: 15 },
+                { wch: 12 },
+                { wch: 12 },
+                { wch: 30 },
+                { wch: 15 }
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Confirmaciones');
+            XLSX.writeFile(wb, 'confirmaciones-xv-karol.xlsx');
+        }
+
+        // Enter para login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -58,32 +58,42 @@ END:VCALENDAR`;
             link.click();
         });
 
-        // RSVP Form
-        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value,
-                guests: document.getElementById('guests').value,
-                dietary: document.getElementById('dietary').value
-            };
+  // RSVP Form - ACTUALIZADO PARA GUARDAR DATOS
+document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        id: Date.now().toString(),
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        guests: parseInt(document.getElementById('guests').value),
+        dietary: document.getElementById('dietary').value,
+        timestamp: new Date().toISOString()
+    };
 
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-            
-            // Simulate email send (in production, this would connect to a backend)
-            console.log('RSVP Data:', formData);
-            
-            // Reset form
-            this.reset();
-            
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
-        });
+    const successMessage = document.getElementById('successMessage');
+    
+    try {
+        // Guardar en storage persistente
+        await window.storage.set(`rsvp:${formData.id}`, JSON.stringify(formData));
+
+        // Mostrar mensaje de éxito
+        successMessage.style.display = 'block';
+        console.log('RSVP guardado exitosamente:', formData);
+        
+        // Reset form
+        this.reset();
+        
+        // Ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+
+    } catch (error) {
+        console.error('Error al guardar RSVP:', error);
+        alert('Hubo un error al guardar tu confirmación. Por favor intenta de nuevo.');
+    }
+});
 
         // Guestbook Form
         const messages = [];
