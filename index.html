@@ -187,17 +187,17 @@
     <!-- RSVP -->
     <section class="rsvp">
         <h2 class="section-title">Tu Pase de Entrada</h2>
-        <div id="invitationInfo" style="text-align: center; padding: 40px 20px; display: none;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                <div style="font-size: 3rem; margin-bottom: 20px;">🎫</div>
-                <p style="font-size: 1.8rem; font-weight: 700; margin-bottom: 15px;" id="guestNameDisplay"></p>
-                <p style="font-size: 2.5rem; font-weight: 700; margin: 20px 0;" id="passesDisplay"></p>
-                <p style="font-size: 1rem; opacity: 0.9; margin-top: 20px;">Muestra este pase en la entrada</p>
-                <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 10px;">Guarda este link para acceder en cualquier momento</p>
+        <div id="invitationInfo" class="invitation-pass-container" style="display: none;">
+            <div class="pass-card">
+                <div class="pass-emoji">🎫</div>
+                <p class="pass-name" id="guestNameDisplay"></p>
+                <p class="pass-number" id="passesDisplay"></p>
+                <p class="pass-instruction">Muestra este pase en la entrada</p>
+                <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
             </div>
-            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-                <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">📍 <strong>Puntos Importantes:</strong></p>
-                <p style="font-size: 0.95rem; color: #666; line-height: 1.6;">
+            <div class="pass-info">
+                <p class="info-title">📍 <strong>Puntos Importantes:</strong></p>
+                <p class="info-list">
                     ✓ Presenta este pase al llegar<br>
                     ✓ El número de personas está confirmado<br>
                     ✓ Por favor llega puntual<br>
@@ -205,9 +205,9 @@
                 </p>
             </div>
         </div>
-        <div id="noInvitation" style="text-align: center; padding: 40px 20px; display: none;">
-            <p style="font-size: 1.2rem; color: #666;">Esta página requiere una invitación personalizada</p>
-            <p style="font-size: 1rem; color: #999; margin-top: 10px;">Contacta a Karol para obtener tu link de invitación</p>
+        <div id="noInvitation" class="no-invitation" style="display: none;">
+            <p class="no-invitation-title">Esta página requiere una invitación personalizada</p>
+            <p class="no-invitation-subtitle">Contacta a Karol para obtener tu link de invitación</p>
         </div>
     </section>
 
