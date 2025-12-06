@@ -232,6 +232,168 @@
             margin-right: 10px;
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #d4a5d4;
+            border-bottom-color: #d4a5d4;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #d4a5d4;
+            background: white;
+            color: #d4a5d4;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #d4a5d4;
+            color: white;
+        }
+
+        /* Confirmations List */
+        .confirmations-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .confirmation-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #d4a5d4;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .confirmation-info {
+            flex: 1;
+        }
+
+        .guest-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .guest-details {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .status-confirmed {
+            background: #d4f4dd;
+            color: #2d6a3e;
+        }
+
+        .status-declined {
+            background: #ffe0e0;
+            color: #8b0000;
+        }
+
+        .status-pending {
+            background: #fff4e0;
+            color: #8b6f00;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             body {
@@ -280,6 +442,34 @@
                 width: 100%;
                 margin-top: 10px;
             }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .confirmation-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+                text-align: left;
+            }
+
+            .tab-btn.active {
+                border-left-color: #d4a5d4;
+                border-bottom-color: transparent;
+            }
         }
     </style>
 </head>
@@ -287,6 +477,15 @@
     <div class="container">
         <h1>🎉 Generador de Invitaciones</h1>
         <p class="subtitle">XV Años de Karol Dariana</p>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('generator')">📝 Crear Invitación</button>
+            <button class="tab-btn" onclick="switchTab('confirmations')">📊 Confirmaciones</button>
+        </div>
+
+        <!-- Tab: Generador -->
+        <div id="generatorTab" class="tab-content active">
 
         <div class="alert alert-info">
             <strong>💡 Dominio:</strong> https://omavga.github.io/karolXV/<br>
@@ -326,16 +525,82 @@
             <h3 style="color: #d4a5d4; margin-bottom: 15px;">📋 Invitaciones Generadas</h3>
             <div id="listContainer"></div>
         </div>
+        </div>
+
+        <!-- Tab: Confirmaciones -->
+        <div id="confirmationsTab" class="tab-content">
+            <button class="btn" onclick="loadConfirmations()" style="max-width: 200px; margin: 0 auto 20px auto; display: block;">🔄 Actualizar</button>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalConfirmed">0</span>
+                    <span class="stat-label">Confirmados</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalPeople">0</span>
+                    <span class="stat-label">Personas</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalDeclined">0</span>
+                    <span class="stat-label">No Asisten</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalPending">0</span>
+                    <span class="stat-label">Pendientes</span>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterList('all')">Todos</button>
+                <button class="filter-btn" onclick="filterList('confirmed')">✓ Confirmados</button>
+                <button class="filter-btn" onclick="filterList('declined')">✗ No Asisten</button>
+                <button class="filter-btn" onclick="filterList('pending')">⏳ Pendientes</button>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <p>Cargando confirmaciones...</p>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📭</div>
+                <p>No hay confirmaciones registradas</p>
+            </div>
+
+            <div id="confirmationsList" class="confirmations-list" style="display: none;"></div>
+        </div>
     </div>
 
     <script>
         const baseURL = 'https://omavga.github.io/karolXV/';
         let invitations = [];
+        let allConfirmations = [];
+        let currentFilter = 'all';
 
         // Función de encriptación para generar código único
         function encodeInvitation(name, passes) {
             const data = `${name}|${passes}`;
             return btoa(encodeURIComponent(data));
+        }
+
+        // Cambiar entre tabs
+        function switchTab(tabName) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar el tab seleccionado
+            if (tabName === 'generator') {
+                document.getElementById('generatorTab').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'confirmations') {
+                document.getElementById('confirmationsTab').classList.add('active');
+                event.target.classList.add('active');
+                loadConfirmations();
+            }
         }
 
         // Cargar invitaciones del localStorage
@@ -498,6 +763,145 @@ Karol Dariana ✨`;
 
         // Cargar al iniciar
         loadInvitations();
+        
+        // Cargar confirmaciones (sistema compartido)
+        async function loadConfirmations() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('confirmationsList').style.display = 'none';
+
+            try {
+                // Cargar todas las confirmaciones del storage compartido
+                const confirmationsResult = await window.storage.list('confirmation:', true);
+
+                allConfirmations = [];
+
+                if (confirmationsResult && confirmationsResult.keys) {
+                    for (const key of confirmationsResult.keys) {
+                        try {
+                            const result = await window.storage.get(key, true);
+                            if (result && result.value) {
+                                allConfirmations.push(JSON.parse(result.value));
+                            }
+                        } catch (e) {
+                            console.error('Error loading confirmation:', e);
+                        }
+                    }
+                }
+
+                updateStats();
+                displayConfirmations();
+
+            } catch (error) {
+                console.error('Error al cargar confirmaciones:', error);
+                document.getElementById('loadingState').innerHTML = '<p style="color: #dc3545;">Error al cargar las confirmaciones</p>';
+            }
+        }
+
+        function updateStats() {
+            const confirmed = allConfirmations.filter(c => c.status === 'confirmed');
+            const declined = allConfirmations.filter(c => c.status === 'declined');
+            const totalPeople = confirmed.reduce((sum, c) => sum + (c.passes || 0), 0);
+            const pending = invitations.length - allConfirmations.length;
+
+            document.getElementById('totalConfirmed').textContent = confirmed.length;
+            document.getElementById('totalPeople').textContent = totalPeople;
+            document.getElementById('totalDeclined').textContent = declined.length;
+            document.getElementById('totalPending').textContent = Math.max(0, pending);
+        }
+
+        function displayConfirmations() {
+            document.getElementById('loadingState').style.display = 'none';
+
+            const listContainer = document.getElementById('confirmationsList');
+            
+            // Combinar confirmaciones con invitaciones pendientes
+            const allItems = [];
+
+            // Agregar confirmaciones
+            allConfirmations.forEach(conf => {
+                allItems.push({
+                    name: conf.name,
+                    passes: conf.passes,
+                    status: conf.status,
+                    timestamp: conf.timestamp,
+                    type: 'confirmation'
+                });
+            });
+
+            // Agregar invitaciones pendientes
+            const confirmedNames = allConfirmations.map(c => c.name);
+            invitations.forEach(inv => {
+                if (!confirmedNames.includes(inv.name)) {
+                    allItems.push({
+                        name: inv.name,
+                        passes: inv.passes,
+                        status: 'pending',
+                        timestamp: inv.created,
+                        type: 'invitation'
+                    });
+                }
+            });
+
+            if (allItems.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            // Filtrar según selección
+            const filtered = currentFilter === 'all' 
+                ? allItems 
+                : allItems.filter(item => item.status === currentFilter);
+
+            if (filtered.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            // Ordenar por fecha (más recientes primero)
+            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            listContainer.innerHTML = filtered.map(item => {
+                const statusClass = item.status === 'confirmed' ? 'status-confirmed' : 
+                                   item.status === 'declined' ? 'status-declined' : 'status-pending';
+                const statusText = item.status === 'confirmed' ? '✓ Confirmado' : 
+                                  item.status === 'declined' ? '✗ No asiste' : '⏳ Pendiente';
+                const date = new Date(item.timestamp).toLocaleDateString('es-MX', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+
+                return `
+                    <div class="confirmation-card">
+                        <div class="confirmation-info">
+                            <div class="guest-name">${item.name}</div>
+                            <div class="guest-details">
+                                🎫 ${item.passes} ${item.passes === 1 ? 'persona' : 'personas'}
+                                ${item.status !== 'pending' ? ` • ${date}` : ''}
+                            </div>
+                        </div>
+                        <div class="status-badge ${statusClass}">
+                            ${statusText}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            listContainer.style.display = 'grid';
+        }
+
+        function filterList(filter) {
+            currentFilter = filter;
+            
+            // Actualizar botones
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            displayConfirmations();
+        }
     </script>
 </body>
 </html>
