@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
             min-height: 100vh;
             padding: 20px;
             display: flex;
@@ -31,7 +31,8 @@
         }
 
         h1 {
-            color: #667eea;
+            font-family: 'Playfair Display', serif;
+            color: #d4a5d4;
             margin-bottom: 10px;
             font-size: 2rem;
         }
@@ -64,11 +65,11 @@
 
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #d4a5d4;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
             color: white;
             padding: 15px 30px;
             border: none;
@@ -95,7 +96,7 @@
             padding: 20px;
             background: #f8f9fa;
             border-radius: 10px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #d4a5d4;
         }
 
         .result-box.active {
@@ -104,7 +105,7 @@
 
         .result-title {
             font-weight: 600;
-            color: #667eea;
+            color: #d4a5d4;
             margin-bottom: 10px;
             font-size: 1.1rem;
         }
@@ -171,13 +172,15 @@
         }
 
         .invitation-item {
-            background: #f8f9fa;
+            background: #f8f9f9;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .invitation-info {
@@ -197,7 +200,7 @@
         }
 
         .small-btn {
-            background: #667eea;
+            background: #d4a5d4;
             color: white;
             padding: 8px 15px;
             border: none;
@@ -208,7 +211,7 @@
         }
 
         .small-btn:hover {
-            background: #5568d3;
+            background: #c494c4;
         }
 
         .alert {
@@ -227,6 +230,56 @@
         .emoji {
             font-size: 1.5rem;
             margin-right: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            .invitation-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .invitation-info {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .small-btn {
+                margin-left: 0;
+                margin-top: 5px;
+                width: 100%;
+            }
+
+            .url-display {
+                font-size: 0.75rem;
+                padding: 10px;
+            }
+
+            .whatsapp-message {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+
+            .copy-btn, .whatsapp-btn {
+                width: 100%;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
@@ -269,7 +322,7 @@
         </div>
 
         <div class="invitations-list" id="invitationsList">
-            <h3 style="color: #667eea; margin-bottom: 15px;">📋 Invitaciones Generadas</h3>
+            <h3 style="color: #d4a5d4; margin-bottom: 15px;">📋 Invitaciones Generadas</h3>
             <div id="listContainer"></div>
         </div>
     </div>
