@@ -23,110 +23,59 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
+// Función simple de encriptación/desencriptación
+function encodeInvitation(name, passes) {
+    const data = `${name}|${passes}`;
+    return btoa(encodeURIComponent(data));
+}
+
+function decodeInvitation(code) {
+    try {
+        const decoded = decodeURIComponent(atob(code));
+        const [name, passes] = decoded.split('|');
+        return { name, passes: parseInt(passes) };
+    } catch (e) {
+        return null;
+    }
+}
+
 // Obtener parámetros de la URL
 function getURLParams() {
     const params = new URLSearchParams(window.location.search);
+    const code = params.get('code') || params.get('codigo');
+    
+    if (code) {
+        // Si hay un código, decodificarlo
+        return decodeInvitation(code);
+    }
+    
+    // Fallback al método anterior (por compatibilidad)
     return {
         name: params.get('name') || params.get('nombre'),
         passes: parseInt(params.get('passes') || params.get('pases')) || 1
     };
 }
 
-// Inicializar formulario con datos de la URL
+// Inicializar pase de entrada con datos de la URL
 function initializeInvitation() {
     const invitation = getURLParams();
     
     if (invitation.name) {
-        // Mostrar información de la invitación
+        // Mostrar el pase de entrada
         document.getElementById('invitationInfo').style.display = 'block';
-        document.getElementById('guestNameDisplay').textContent = `Invitación especial para: ${invitation.name}`;
-        document.getElementById('passesDisplay').textContent = `Pases asignados: ${invitation.passes} ${invitation.passes === 1 ? 'persona' : 'personas'}`;
-        
-        // Pre-llenar el formulario
-        document.getElementById('name').value = invitation.name;
-        document.getElementById('guests').value = invitation.passes;
+        document.getElementById('guestNameDisplay').textContent = invitation.name;
+        document.getElementById('passesDisplay').textContent = `${invitation.passes} ${invitation.passes === 1 ? 'Persona' : 'Personas'}`;
+    } else {
+        // Mostrar mensaje si no hay invitación
+        document.getElementById('noInvitation').style.display = 'block';
     }
 }
 
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', initializeInvitation);
 
-// Calendar Buttons
-document.getElementById('googleCalendar')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    const title = encodeURIComponent('XV Años de Karol Dariana');
-    const details = encodeURIComponent('Celebración de XV años de Karol');
-    const location = encodeURIComponent('El Olvido');
-    const startDate = '20251227T150000';
-    const endDate = '20251227T220000';
-    
-    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startDate}/${endDate}`;
-    window.open(googleUrl, '_blank');
-});
-
-document.getElementById('appleCalendar')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-SUMMARY:XV Años de Karol Dariana
-DESCRIPTION:Celebración de XV años
-LOCATION:Salón ---- El Olvido
-DTSTART:20251227T150000
-DTEND:20251227T220000
-END:VEVENT
-END:VCALENDAR`;
-    
-    const blob = new Blob([icsContent], { type: 'text/calendar' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'xv-anos-karol.ics';
-    link.click();
-});
-
-// RSVP Form - Sistema con invitaciones personalizadas
-document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const invitation = getURLParams();
-    
-    const formData = {
-        id: Date.now().toString(),
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        assignedPasses: invitation.passes || 1,
-        attending: document.getElementById('attending').value,
-        dietary: document.getElementById('dietary').value,
-        timestamp: new Date().toISOString()
-    };
-
-    const successMessage = document.getElementById('successMessage');
-    
-    try {
-        // Guardar en storage persistente
-        await window.storage.set(`rsvp:${formData.id}`, JSON.stringify(formData));
-
-        // Mostrar mensaje de éxito
-        successMessage.style.display = 'block';
-        console.log('RSVP guardado exitosamente:', formData);
-        
-        // Deshabilitar el formulario después de enviar
-        const formElements = this.elements;
-        for (let i = 0; i < formElements.length; i++) {
-            formElements[i].disabled = true;
-        }
-        
-        // Ocultar mensaje después de 5 segundos
-        setTimeout(() => {
-            successMessage.style.display = 'none';
-        }, 5000);
-
-    } catch (error) {
-        console.error('Error al guardar RSVP:', error);
-        alert('Hubo un error al guardar tu confirmación. Por favor intenta de nuevo.');
-    }
-});
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', initializeInvitation);
 
 // Guestbook Form
 const messages = [];

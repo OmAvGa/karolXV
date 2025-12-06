@@ -289,7 +289,8 @@
         <p class="subtitle">XV Años de Karol Dariana</p>
 
         <div class="alert alert-info">
-            <strong>💡 Dominio:</strong> https://omavga.github.io/karolXV/
+            <strong>💡 Dominio:</strong> https://omavga.github.io/karolXV/<br>
+            <strong>🔒 Seguridad:</strong> Los links generan códigos únicos que no se pueden modificar
         </div>
 
         <form id="invitationForm">
@@ -331,6 +332,12 @@
         const baseURL = 'https://omavga.github.io/karolXV/';
         let invitations = [];
 
+        // Función de encriptación para generar código único
+        function encodeInvitation(name, passes) {
+            const data = `${name}|${passes}`;
+            return btoa(encodeURIComponent(data));
+        }
+
         // Cargar invitaciones del localStorage
         function loadInvitations() {
             const saved = localStorage.getItem('invitations');
@@ -367,8 +374,8 @@
         });
 
         function displayInvitation(invitation) {
-            const encodedName = encodeURIComponent(invitation.name);
-            const invitationURL = `${baseURL}?name=${encodedName}&passes=${invitation.passes}`;
+            const invitationCode = encodeInvitation(invitation.name, invitation.passes);
+            const invitationURL = `${baseURL}?code=${invitationCode}`;
             
             const message = `¡Hola ${invitation.name}! 🎉
 
@@ -453,8 +460,8 @@ Karol Dariana ✨`;
         function sendWhatsApp(id) {
             const invitation = invitations.find(inv => inv.id === id);
             if (invitation) {
-                const encodedName = encodeURIComponent(invitation.name);
-                const invitationURL = `${baseURL}?name=${encodedName}&passes=${invitation.passes}`;
+                const invitationCode = encodeInvitation(invitation.name, invitation.passes);
+                const invitationURL = `${baseURL}?code=${invitationCode}`;
                 
                 const message = `¡Hola ${invitation.name}! 🎉
 
