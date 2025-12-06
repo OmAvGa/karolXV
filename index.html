@@ -178,8 +178,17 @@
                 <div class="pass-emoji">🎫</div>
                 <p class="pass-name" id="guestNameDisplay"></p>
                 <p class="pass-number" id="passesDisplay"></p>
+                <div id="confirmationStatus" style="margin-top: 20px;"></div>
                 <p class="pass-instruction">Muestra este pase en la entrada</p>
                 <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
+            </div>
+            <div id="confirmationSection" style="margin-top: 20px; display: none;">
+                <button id="confirmBtn" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
+                    ✓ Confirmar Asistencia
+                </button>
+                <button id="declineBtn" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
+                    ✗ No podré asistir
+                </button>
             </div>
             <div class="pass-info">
                 <p class="info-title">📍 <strong>Puntos Importantes:</strong></p>
