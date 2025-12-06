@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Invitaciones - XV Años Karol</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-box.active {
+            display: block;
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .url-display {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .whatsapp-message {
+            background: #dcf8c6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            white-space: pre-line;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            background: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background: #20BA5A;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .whatsapp-btn:hover {
+            background: #20BA5A;
+        }
+
+        .invitations-list {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .invitation-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .invitation-info {
+            flex: 1;
+        }
+
+        .invitation-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .invitation-passes {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .small-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+
+        .small-btn:hover {
+            background: #5568d3;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Generador de Invitaciones</h1>
+        <p class="subtitle">XV Años de Karol Dariana</p>
+
+        <div class="alert alert-info">
+            <strong>💡 Dominio:</strong> https://omavga.github.io/karolXV/
+        </div>
+
+        <form id="invitationForm">
+            <div class="form-group">
+                <label for="guestName">👤 Nombre del Invitado(a) *</label>
+                <input type="text" id="guestName" placeholder="Ej: María García" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passes">🎫 Número de Pases *</label>
+                <input type="number" id="passes" min="1" max="10" value="1" required>
+            </div>
+
+            <button type="submit" class="btn">✨ Generar Invitación</button>
+        </form>
+
+        <div id="resultBox" class="result-box">
+            <div class="result-title">📋 Tu invitación está lista</div>
+            
+            <p><strong>Link de invitación:</strong></p>
+            <div class="url-display" id="urlDisplay"></div>
+            <button class="copy-btn" onclick="copyURL()">📋 Copiar Link</button>
+
+            <p style="margin-top: 20px;"><strong>Mensaje sugerido para WhatsApp:</strong></p>
+            <div class="whatsapp-message" id="whatsappMessage"></div>
+            <button class="copy-btn" onclick="copyMessage()">📋 Copiar Mensaje</button>
+            <a id="whatsappLink" href="#" target="_blank" class="whatsapp-btn">💬 Enviar por WhatsApp</a>
+
+            <button class="btn" onclick="resetForm()" style="margin-top: 20px;">➕ Crear Otra Invitación</button>
+        </div>
+
+        <div class="invitations-list" id="invitationsList">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📋 Invitaciones Generadas</h3>
+            <div id="listContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const baseURL = 'https://omavga.github.io/karolXV/';
+        let invitations = [];
+
+        // Cargar invitaciones del localStorage
+        function loadInvitations() {
+            const saved = localStorage.getItem('invitations');
+            if (saved) {
+                invitations = JSON.parse(saved);
+                renderInvitations();
+            }
+        }
+
+        // Guardar invitaciones en localStorage
+        function saveInvitations() {
+            localStorage.setItem('invitations', JSON.stringify(invitations));
+        }
+
+        // Generar invitación
+        document.getElementById('invitationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('guestName').value;
+            const passes = document.getElementById('passes').value;
+            
+            const invitation = {
+                id: Date.now(),
+                name: name,
+                passes: parseInt(passes),
+                created: new Date().toISOString()
+            };
+
+            invitations.unshift(invitation);
+            saveInvitations();
+            
+            displayInvitation(invitation);
+            renderInvitations();
+        });
+
+        function displayInvitation(invitation) {
+            const encodedName = encodeURIComponent(invitation.name);
+            const invitationURL = `${baseURL}?name=${encodedName}&passes=${invitation.passes}`;
+            
+            const message = `¡Hola ${invitation.name}! 🎉
+
+Estás cordialmente invitad${invitation.passes > 1 ? 'os' : 'o/a'} a mis XV Años.
+
+📅 Fecha: 27 de Diciembre, 2025
+⛪ Misa: 6:00 PM - Parroquia Nuestra Señora del Rosario
+🎉 Fiesta: 8:00 PM - El Olvido
+
+🎫 Pases asignados: ${invitation.passes} ${invitation.passes === 1 ? 'persona' : 'personas'}
+
+Te comparto tu invitación personalizada:
+${invitationURL}
+
+Por favor confirma tu asistencia desde el enlace.
+
+¡Espero contar con tu presencia! 💕
+
+Con cariño,
+Karol Dariana ✨`;
+
+            document.getElementById('urlDisplay').textContent = invitationURL;
+            document.getElementById('whatsappMessage').textContent = message;
+            
+            const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            document.getElementById('whatsappLink').href = whatsappURL;
+            
+            document.getElementById('resultBox').classList.add('active');
+            document.getElementById('invitationForm').style.display = 'none';
+        }
+
+        function copyURL() {
+            const url = document.getElementById('urlDisplay').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ Link copiado al portapapeles');
+            });
+        }
+
+        function copyMessage() {
+            const message = document.getElementById('whatsappMessage').textContent;
+            navigator.clipboard.writeText(message).then(() => {
+                alert('✅ Mensaje copiado al portapapeles');
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('invitationForm').reset();
+            document.getElementById('invitationForm').style.display = 'block';
+            document.getElementById('resultBox').classList.remove('active');
+        }
+
+        function renderInvitations() {
+            const container = document.getElementById('listContainer');
+            
+            if (invitations.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center;">No hay invitaciones generadas aún</p>';
+                return;
+            }
+
+            container.innerHTML = invitations.map(inv => `
+                <div class="invitation-item">
+                    <div class="invitation-info">
+                        <div class="invitation-name">${inv.name}</div>
+                        <div class="invitation-passes">${inv.passes} ${inv.passes === 1 ? 'pase' : 'pases'}</div>
+                    </div>
+                    <div>
+                        <button class="small-btn" onclick="viewInvitation(${inv.id})">👁️ Ver</button>
+                        <button class="small-btn" onclick="sendWhatsApp(${inv.id})" style="background: #25D366;">💬 Enviar</button>
+                        <button class="small-btn" onclick="deleteInvitation(${inv.id})" style="background: #dc3545;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewInvitation(id) {
+            const invitation = invitations.find(inv => inv.id === id);
+            if (invitation) {
+                displayInvitation(invitation);
+            }
+        }
+
+        function sendWhatsApp(id) {
+            const invitation = invitations.find(inv => inv.id === id);
+            if (invitation) {
+                const encodedName = encodeURIComponent(invitation.name);
+                const invitationURL = `${baseURL}?name=${encodedName}&passes=${invitation.passes}`;
+                
+                const message = `¡Hola ${invitation.name}! 🎉
+
+Estás cordialmente invitad${invitation.passes > 1 ? 'os' : 'o/a'} a mis XV Años.
+
+📅 Fecha: 27 de Diciembre, 2025
+⛪ Misa: 6:00 PM - Parroquia Nuestra Señora del Rosario
+🎉 Fiesta: 8:00 PM - El Olvido
+
+🎫 Pases asignados: ${invitation.passes} ${invitation.passes === 1 ? 'persona' : 'personas'}
+
+Te comparto tu invitación personalizada:
+${invitationURL}
+
+Por favor confirma tu asistencia desde el enlace.
+
+¡Espero contar con tu presencia! 💕
+
+Con cariño,
+Karol Dariana ✨`;
+
+                const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                window.open(whatsappURL, '_blank');
+            }
+        }
+
+        function deleteInvitation(id) {
+            if (confirm('¿Estás seguro de eliminar esta invitación?')) {
+                invitations = invitations.filter(inv => inv.id !== id);
+                saveInvitations();
+                renderInvitations();
+            }
+        }
+
+        // Cargar al iniciar
+        loadInvitations();
+    </script>
+</body>
+</html>

@@ -264,6 +264,32 @@
             transform: scale(1.1);
         }
 
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s ease;
+            z-index: 1000;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+
         /* Location */
         .location {
             background: white;
@@ -497,50 +523,53 @@
             padding: 40px 20px;
         }
 
-       /* Responsive */
-@media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 768px) {
 
-    .hero-content h1 {
-        font-size: 3rem;
-    }
+            .hero-content h1 {
+                font-size: 3rem;
+            }
 
-    .section-title {
-        font-size: 2rem;
-    }
+            .section-title {
+                font-size: 2rem;
+            }
 
-    .story-content,
-    .location-container {
-        grid-template-columns: 1fr;
-    }
+            .story-content,
+            .location-container {
+                grid-template-columns: 1fr;
+            }
 
-    .countdown-timer {
-        display: flex;
-        gap: 8px;
-        flex-wrap: nowrap;         /* 🔹 Siempre en una sola línea */
-        width: 100%;
-    }
+            .countdown-timer {
+                display: flex;
+                gap: 8px;
+                flex-wrap: nowrap;
+                /* 🔹 Siempre en una sola línea */
+                width: 100%;
+            }
 
-    .countdown-item {
-        flex: 1;                    /* 🔹 Todos iguales, se ajustan al ancho */
-        min-width: 0;               /* 🔹 Evita que se “mochen” */
-        padding: 12px 5px;
-        border-radius: 12px;
-    }
+            .countdown-item {
+                flex: 1;
+                /* 🔹 Todos iguales, se ajustan al ancho */
+                min-width: 0;
+                /* 🔹 Evita que se “mochen” */
+                padding: 12px 5px;
+                border-radius: 12px;
+            }
 
-    .countdown-number {
-        font-size: 1.5rem;
-    }
+            .countdown-number {
+                font-size: 1.5rem;
+            }
 
-    .countdown-label {
-        font-size: 0.7rem;
-        letter-spacing: 1px;
-    }
+            .countdown-label {
+                font-size: 0.7rem;
+                letter-spacing: 1px;
+            }
 
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
-    }
-}
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+        }
 
 
         .success-message {

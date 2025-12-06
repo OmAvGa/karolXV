@@ -15,8 +15,7 @@
 <body>
     <!-- Hero Section -->
     <section class="hero">
-        <img src="img/fondo.jpeg" alt="Portada"
-            class="hero-video">
+        <img src="img/fondo.jpeg" alt="Portada" class="hero-video">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>Karol Dariana</h1>
@@ -58,8 +57,7 @@
         <h2 class="section-title">Mi Historia</h2>
         <div class="story-content">
             <div>
-                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&h=600&fit=crop"
-                    alt="Historia" class="story-image">
+                <img src="img/foto 1.jpeg" alt="Historia" class="story-image">
             </div>
             <div class="story-text">
                 <p>Hace quince años comenzó una historia llena de amor, sueños y esperanza. Cada momento ha sido un
@@ -72,8 +70,7 @@
         </div>
         <div class="story-content" style="direction: rtl;">
             <div style="direction: ltr;">
-                <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&h=600&fit=crop"
-                    alt="Familia" class="story-image">
+                <img src="img/foto 2.jpeg" alt="Familia" class="story-image">
             </div>
             <div class="story-text" style="direction: ltr;">
                 <p>Con el apoyo incondicional de mi familia, he crecido rodeada de valores, cariño y las mejores
@@ -88,15 +85,9 @@
     <section class="gallery">
         <h2 class="section-title">Galería de Recuerdos</h2>
         <div class="gallery-grid">
-            <div class="gallery-item"><img
-                    src="https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400&h=400&fit=crop"
-                    alt="Foto 1"></div>
-            <div class="gallery-item"><img
-                    src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=400&h=400&fit=crop"
-                    alt="Foto 2"></div>
-            <div class="gallery-item"><img
-                    src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop"
-                    alt="Foto 3"></div>
+            <div class="gallery-item"><img src="img/foto 1.jpeg" alt="Foto 1"></div>
+            <div class="gallery-item"><img src="img/foto 2.jpeg" alt="Foto 2"></div>
+            <div class="gallery-item"><img src="img/foto 3.jpeg" alt="Foto 3"></div>
             <div class="gallery-item"><img
                     src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400&h=400&fit=crop"
                     alt="Foto 4"></div>
@@ -108,6 +99,11 @@
                     alt="Foto 6"></div>
         </div>
     </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <img id="lightbox-img">
+    </div>
 
     <!-- Location -->
     <section class="location">
@@ -122,7 +118,8 @@
                     <p>🕐 6:00 PM</p>
                 </div>
                 <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7484.467703199077!2d-102.7123671107261!3d20.290585367262487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842eddd4febf76c7%3A0xce7a2ca62618ae9!2sParroqu%C3%ADa%20de%20Nuestra%20Se%C3%B1ora%20del%20Rosario!5e0!3m2!1ses-419!2smx!4v1761735814794!5m2!1ses-419!2smx"
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7484.467703199077!2d-102.7123671107261!3d20.290585367262487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842eddd4febf76c7%3A0xce7a2ca62618ae9!2sParroqu%C3%ADa%20de%20Nuestra%20Se%C3%B1ora%20del%20Rosario!5e0!3m2!1ses-419!2smx!4v1761735814794!5m2!1ses-419!2smx"
                         width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
                 <a href="https://maps.app.goo.gl/VmALeQqJGamFeuCk6" class="btn btn-primary"
@@ -190,19 +187,31 @@
     <!-- RSVP -->
     <section class="rsvp">
         <h2 class="section-title">Confirmación de Asistencia</h2>
+        <div id="invitationInfo" style="text-align: center; margin-bottom: 30px; display: none;">
+            <p style="font-size: 1.3rem; color: var(--gold); font-weight: 600;" id="guestNameDisplay"></p>
+            <p style="font-size: 1.1rem; margin-top: 10px;" id="passesDisplay"></p>
+        </div>
         <form class="rsvp-form" id="rsvpForm">
             <div class="success-message" id="successMessage">¡Gracias por confirmar tu asistencia!</div>
             <div class="form-group">
                 <label for="name">Nombre completo *</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" required readonly>
             </div>
             <div class="form-group">
                 <label for="phone">Teléfono *</label>
                 <input type="tel" id="phone" name="phone" required>
             </div>
+            <div class="form-group" style="display: none;">
+                <label for="guests">Número de pases asignados</label>
+                <input type="number" id="guests" name="guests" readonly>
+            </div>
             <div class="form-group">
-                <label for="guests">Número de acompañantes</label>
-                <input type="number" id="guests" name="guests" min="0" max="5" value="0">
+                <label for="attending">¿Confirmas tu asistencia? *</label>
+                <select id="attending" name="attending" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="yes">Sí, asistiré</option>
+                    <option value="no">No podré asistir</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="dietary">Restricciones alimentarias</label>
@@ -230,6 +239,23 @@
 
         </div>
     </section>
+    
+    <script>
+        const images = document.querySelectorAll(".gallery-item img");
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+
+        images.forEach(img => {
+            img.addEventListener("click", () => {
+                lightbox.classList.add("active");
+                lightboxImg.src = img.src;
+            });
+        });
+
+        lightbox.addEventListener("click", () => {
+            lightbox.classList.remove("active");
+        });
+    </script>
 
     <!-- Footer -->
     <footer>
