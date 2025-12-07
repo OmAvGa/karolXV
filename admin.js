@@ -1,11 +1,7 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// ============================================
+// CONFIGURACIÓN DE FIREBASE
+// ============================================
+// IMPORTANTE: Reemplaza con tus datos de Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyD6JBDB2qZMDHF7J1M3Ow7Ma9AF3WXNGiE",
   authDomain: "xv-anos-karol.firebaseapp.com",
@@ -17,124 +13,219 @@ const firebaseConfig = {
   measurementId: "G-VGWB2T9R7W"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Verificar que Firebase esté cargado
+if (typeof firebase === 'undefined') {
+    console.error('❌ Firebase no está cargado. Verifica los scripts en admin.html');
+    alert('Error: Firebase no se cargó correctamente. Revisa la consola.');
+} else {
+    console.log('✅ Firebase está disponible');
+}
 
+// Inicializar Firebase
+try {
+    firebase.initializeApp(firebaseConfig);
+    console.log('✅ Firebase inicializado correctamente');
+} catch (error) {
+    console.error('❌ Error al inicializar Firebase:', error);
+    alert('Error al inicializar Firebase: ' + error.message);
+}
+
+const database = firebase.database();
+
+// ============================================
+// VARIABLES GLOBALES
+// ============================================
 let allGuests = [];
 let currentFilter = 'all';
 
-// Función para codificar invitación
+// ============================================
+// FUNCIÓN PARA CODIFICAR INVITACIÓN
+// ============================================
 function encodeInvitation(name, passes) {
-    const data = `${name}|${passes}`;
+    const data = name + '|' + passes;
     return btoa(encodeURIComponent(data));
 }
 
-// Crear nueva invitación
-document.getElementById('createInvitationForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const name = document.getElementById('guestName').value.trim();
-    const passes = parseInt(document.getElementById('guestPasses').value);
-    
-    if (!name || passes < 1) {
-        alert('Por favor completa todos los campos correctamente');
-        return;
-    }
-    
-    try {
-        // Crear ID único
-        const guestId = database.ref('guests').push().key;
+// ============================================
+// CREAR NUEVA INVITACIÓN
+// ============================================
+const createForm = document.getElementById('createInvitationForm');
+
+if (createForm) {
+    createForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        console.log('📝 Formulario enviado');
+        
+        const nameInput = document.getElementById('guestName');
+        const passesInput = document.getElementById('guestPasses');
+        
+        if (!nameInput || !passesInput) {
+            console.error('❌ No se encontraron los campos del formulario');
+            alert('Error: No se encontraron los campos del formulario');
+            return;
+        }
+        
+        const name = nameInput.value.trim();
+        const passes = parseInt(passesInput.value);
+        
+        console.log('📋 Datos del formulario:', { name: name, passes: passes });
+        
+        if (!name || passes < 1) {
+            alert('Por favor completa todos los campos correctamente');
+            return;
+        }
         
         // Crear código de invitación
         const invitationCode = encodeInvitation(name, passes);
+        console.log('🔐 Código generado:', invitationCode);
         
-        // Guardar en Firebase
-        await database.ref('guests/' + guestId).set({
+        // Crear objeto con los datos
+        const guestData = {
             name: name,
             passes: passes,
             status: 'pending',
             createdAt: Date.now(),
             invitationCode: invitationCode
-        });
+        };
         
-        // Generar link
-        const invitationLink = `${window.location.origin}/index.html?code=${invitationCode}`;
+        console.log('💾 Intentando guardar en Firebase:', guestData);
         
-        // Mostrar link generado
-        document.getElementById('linkText').textContent = invitationLink;
-        document.getElementById('generatedLink').classList.add('show');
-        
-        // Limpiar formulario
-        document.getElementById('createInvitationForm').reset();
-        
-        // Recargar lista
-        loadGuests();
-        
-    } catch (error) {
-        console.error('Error al crear invitación:', error);
-        alert('Hubo un error al crear la invitación');
-    }
-});
-
-// Copiar link al portapapeles
-function copyLink() {
-    const linkText = document.getElementById('linkText').textContent;
-    navigator.clipboard.writeText(linkText).then(() => {
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = '✓ ¡Copiado!';
-        btn.style.background = '#4caf50';
-        
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-        }, 2000);
+        // Guardar en Firebase
+        database.ref('guests').push(guestData)
+            .then(function(ref) {
+                console.log('✅ Invitación guardada exitosamente. ID:', ref.key);
+                
+                // Generar link
+                const invitationLink = window.location.origin + '/index.html?code=' + invitationCode;
+                console.log('🔗 Link generado:', invitationLink);
+                
+                // Mostrar link
+                const linkTextElement = document.getElementById('linkText');
+                const generatedLinkElement = document.getElementById('generatedLink');
+                
+                if (linkTextElement && generatedLinkElement) {
+                    linkTextElement.textContent = invitationLink;
+                    generatedLinkElement.classList.add('show');
+                }
+                
+                // Limpiar formulario
+                createForm.reset();
+                
+                alert('¡Invitación creada exitosamente!');
+            })
+            .catch(function(error) {
+                console.error('❌ Error al guardar en Firebase:', error);
+                console.error('Código de error:', error.code);
+                console.error('Mensaje:', error.message);
+                alert('Error al crear la invitación: ' + error.message);
+            });
     });
+} else {
+    console.error('❌ No se encontró el formulario createInvitationForm');
 }
 
-// Cargar invitados
+// ============================================
+// COPIAR LINK AL PORTAPAPELES
+// ============================================
+function copyLink() {
+    const linkText = document.getElementById('linkText').textContent;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(linkText).then(function() {
+            const btn = window.event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ ¡Copiado!';
+            btn.style.background = '#4caf50';
+            
+            setTimeout(function() {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }).catch(function(err) {
+            console.error('Error al copiar:', err);
+            alert('No se pudo copiar. Copia manualmente el link.');
+        });
+    } else {
+        alert('Copia manualmente el link (tu navegador no soporta copiar automáticamente)');
+    }
+}
+
+// ============================================
+// CARGAR LISTA DE INVITADOS
+// ============================================
 function loadGuests() {
-    database.ref('guests').on('value', (snapshot) => {
+    console.log('📥 Cargando invitados desde Firebase...');
+    
+    database.ref('guests').on('value', function(snapshot) {
         allGuests = [];
         const data = snapshot.val();
         
+        console.log('📊 Datos recibidos de Firebase:', data);
+        
         if (data) {
-            Object.keys(data).forEach(key => {
+            Object.keys(data).forEach(function(key) {
                 allGuests.push({
                     id: key,
-                    ...data[key]
+                    name: data[key].name,
+                    passes: data[key].passes,
+                    status: data[key].status,
+                    createdAt: data[key].createdAt,
+                    invitationCode: data[key].invitationCode
                 });
             });
         }
         
+        console.log('👥 Total de invitados cargados:', allGuests.length);
+        
         updateStats();
         renderGuestsTable();
+    }, function(error) {
+        console.error('❌ Error al cargar invitados:', error);
+        alert('Error al cargar la lista de invitados: ' + error.message);
     });
 }
 
-// Actualizar estadísticas
+// ============================================
+// ACTUALIZAR ESTADÍSTICAS
+// ============================================
 function updateStats() {
-    const confirmed = allGuests.filter(g => g.status === 'confirmed');
-    const pending = allGuests.filter(g => g.status === 'pending');
-    const declined = allGuests.filter(g => g.status === 'declined');
+    const confirmed = allGuests.filter(function(g) { return g.status === 'confirmed'; });
+    const pending = allGuests.filter(function(g) { return g.status === 'pending'; });
+    const declined = allGuests.filter(function(g) { return g.status === 'declined'; });
     
-    document.getElementById('confirmedCount').textContent = confirmed.length;
-    document.getElementById('pendingCount').textContent = pending.length;
-    document.getElementById('declinedCount').textContent = declined.length;
+    const confirmedCountEl = document.getElementById('confirmedCount');
+    const pendingCountEl = document.getElementById('pendingCount');
+    const declinedCountEl = document.getElementById('declinedCount');
+    const totalPeopleEl = document.getElementById('totalPeople');
+    
+    if (confirmedCountEl) confirmedCountEl.textContent = confirmed.length;
+    if (pendingCountEl) pendingCountEl.textContent = pending.length;
+    if (declinedCountEl) declinedCountEl.textContent = declined.length;
     
     // Calcular total de personas confirmadas
-    const totalPeople = confirmed.reduce((sum, guest) => sum + guest.passes, 0);
-    document.getElementById('totalPeople').textContent = totalPeople;
+    let totalPeople = 0;
+    confirmed.forEach(function(guest) {
+        totalPeople += guest.passes;
+    });
+    
+    if (totalPeopleEl) totalPeopleEl.textContent = totalPeople;
 }
 
-// Renderizar tabla de invitados
+// ============================================
+// RENDERIZAR TABLA DE INVITADOS
+// ============================================
 function renderGuestsTable() {
     const container = document.getElementById('guestsTableContainer');
     
+    if (!container) {
+        console.error('❌ No se encontró guestsTableContainer');
+        return;
+    }
+    
     let filteredGuests = allGuests;
     if (currentFilter !== 'all') {
-        filteredGuests = allGuests.filter(g => g.status === currentFilter);
+        filteredGuests = allGuests.filter(function(g) { return g.status === currentFilter; });
     }
     
     if (filteredGuests.length === 0) {
@@ -142,93 +233,79 @@ function renderGuestsTable() {
         return;
     }
     
-    // Ordenar por fecha de creación (más recientes primero)
-    filteredGuests.sort((a, b) => b.createdAt - a.createdAt);
+    // Ordenar por fecha (más recientes primero)
+    filteredGuests.sort(function(a, b) { return b.createdAt - a.createdAt; });
     
-    let html = `
-        <table class="guests-table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Personas</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+    let html = '<table class="guests-table"><thead><tr>';
+    html += '<th>Nombre</th><th>Personas</th><th>Estado</th><th>Fecha</th><th>Acciones</th>';
+    html += '</tr></thead><tbody>';
     
-    filteredGuests.forEach(guest => {
+    filteredGuests.forEach(function(guest) {
         const date = new Date(guest.createdAt).toLocaleDateString('es-MX');
-        const statusText = {
-            'confirmed': 'Confirmado',
-            'pending': 'Pendiente',
-            'declined': 'Rechazado'
-        }[guest.status];
+        const statusText = guest.status === 'confirmed' ? 'Confirmado' : 
+                          guest.status === 'pending' ? 'Pendiente' : 'Rechazado';
         
-        html += `
-            <tr>
-                <td><strong>${guest.name}</strong></td>
-                <td>${guest.passes}</td>
-                <td><span class="status-badge ${guest.status}">${statusText}</span></td>
-                <td>${date}</td>
-                <td>
-                    <button class="btn" style="padding: 5px 15px; font-size: 0.85rem;" 
-                            onclick="regenerateLink('${guest.id}', '${guest.name}', ${guest.passes})">
-                        🔗 Link
-                    </button>
-                    <button class="btn" style="padding: 5px 15px; font-size: 0.85rem; background: #f44336; color: white;" 
-                            onclick="deleteGuest('${guest.id}', '${guest.name}')">
-                        🗑️
-                    </button>
-                </td>
-            </tr>
-        `;
+        html += '<tr>';
+        html += '<td><strong>' + guest.name + '</strong></td>';
+        html += '<td>' + guest.passes + '</td>';
+        html += '<td><span class="status-badge ' + guest.status + '">' + statusText + '</span></td>';
+        html += '<td>' + date + '</td>';
+        html += '<td>';
+        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem;" onclick="regenerateLink(\'' + guest.id + '\')">🔗 Link</button> ';
+        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem; background: #f44336; color: white;" onclick="deleteGuest(\'' + guest.id + '\', \'' + guest.name + '\')">🗑️</button>';
+        html += '</td>';
+        html += '</tr>';
     });
     
     html += '</tbody></table>';
     container.innerHTML = html;
 }
 
-// Regenerar link de invitación
-function regenerateLink(guestId, name, passes) {
-    database.ref('guests/' + guestId).once('value', (snapshot) => {
+// ============================================
+// REGENERAR LINK DE INVITACIÓN
+// ============================================
+function regenerateLink(guestId) {
+    database.ref('guests/' + guestId).once('value').then(function(snapshot) {
         const guest = snapshot.val();
-        const invitationLink = `${window.location.origin}/index.html?code=${guest.invitationCode}`;
+        const invitationLink = window.location.origin + '/index.html?code=' + guest.invitationCode;
         
-        // Mostrar en el área de link generado
         document.getElementById('linkText').textContent = invitationLink;
         document.getElementById('generatedLink').classList.add('show');
-        
-        // Scroll al link
         document.getElementById('generatedLink').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 }
 
-// Eliminar invitado
+// ============================================
+// ELIMINAR INVITADO
+// ============================================
 function deleteGuest(guestId, name) {
-    if (confirm(`¿Estás seguro de eliminar la invitación de ${name}?`)) {
+    if (confirm('¿Estás seguro de eliminar la invitación de ' + name + '?')) {
         database.ref('guests/' + guestId).remove()
-            .then(() => {
+            .then(function() {
                 alert('Invitación eliminada correctamente');
             })
-            .catch((error) => {
+            .catch(function(error) {
                 console.error('Error al eliminar:', error);
                 alert('Hubo un error al eliminar la invitación');
             });
     }
 }
 
-// Filtros
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+// ============================================
+// CONFIGURAR FILTROS
+// ============================================
+const filterButtons = document.querySelectorAll('.filter-btn');
+filterButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        filterButtons.forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
+        currentFilter = btn.getAttribute('data-filter');
         renderGuestsTable();
     });
 });
 
-// Cargar invitados al iniciar
+// ============================================
+// INICIALIZAR AL CARGAR LA PÁGINA
+// ============================================
+console.log('🚀 Iniciando aplicación...');
 loadGuests();
