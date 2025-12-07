@@ -953,3 +953,252 @@
                 transform: translateY(-5px);
             }
         }
+        /* ============================================
+   ESTILOS RESPONSIVE PARA ADMIN.HTML
+   Agrega esto al final de tu styles.css
+   ============================================ */
+
+/* Tablets y dispositivos medianos */
+@media (max-width: 992px) {
+    .admin-container {
+        padding: 15px;
+    }
+    
+    .admin-header h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .admin-section {
+        padding: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+    .admin-container {
+        margin: 20px auto;
+        padding: 10px;
+    }
+    
+    .admin-header {
+        margin-bottom: 20px;
+    }
+    
+    .admin-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+    
+    .admin-header p {
+        font-size: 0.9rem;
+    }
+    
+    /* Estadísticas en columnas */
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Secciones de admin */
+    .admin-sections {
+        gap: 20px;
+    }
+    
+    .admin-section {
+        padding: 20px 15px;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+    
+    /* Formulario */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .form-group input {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+    
+    .btn-primary {
+        margin-bottom: 10px;
+    }
+    
+    /* Link generado */
+    .generated-link {
+        padding: 12px;
+        margin-top: 15px;
+    }
+    
+    .generated-link h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    .generated-link p {
+        font-size: 0.85rem;
+    }
+    
+    .link-text {
+        font-size: 0.75rem;
+        padding: 8px;
+        margin: 8px 0;
+    }
+    
+    .btn-copy {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* Filtros */
+    .filter-buttons {
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .filter-btn {
+        padding: 6px 15px;
+        font-size: 0.85rem;
+        flex: 1 1 auto;
+    }
+    
+    /* Tabla de invitados */
+    .guests-table {
+        font-size: 0.8rem;
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .guests-table thead {
+        display: none;
+    }
+    
+    .guests-table tbody {
+        display: block;
+    }
+    
+    .guests-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 15px;
+        background: white;
+    }
+    
+    .guests-table td {
+        display: block;
+        text-align: left;
+        padding: 8px 0;
+        border: none;
+    }
+    
+    .guests-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: inline-block;
+        width: 100px;
+        color: #666;
+    }
+    
+    .guests-table td:last-child {
+        padding-top: 12px;
+        margin-top: 12px;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .guests-table td:last-child:before {
+        display: none;
+    }
+    
+    .guests-table .btn {
+        width: 48%;
+        margin: 2px 1%;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+    
+    .empty-state,
+    .loading {
+        padding: 30px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+    
+    .filter-btn {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+}

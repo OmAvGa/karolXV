@@ -96,8 +96,9 @@ if (createForm) {
             .then(function(ref) {
                 console.log('✅ Invitación guardada exitosamente. ID:', ref.key);
                 
-                // Generar link
-                const invitationLink = window.location.origin + '/index.html?code=' + invitationCode;
+                // Generar link (corregido para que funcione en cualquier ubicación)
+                const baseUrl = window.location.href.replace('admin.html', 'index.html').split('?')[0];
+                const invitationLink = baseUrl + '?code=' + invitationCode;
                 console.log('🔗 Link generado:', invitationLink);
                 
                 // Mostrar link
@@ -246,10 +247,10 @@ function renderGuestsTable() {
                           guest.status === 'pending' ? 'Pendiente' : 'Rechazado';
         
         html += '<tr>';
-        html += '<td><strong>' + guest.name + '</strong></td>';
-        html += '<td>' + guest.passes + '</td>';
-        html += '<td><span class="status-badge ' + guest.status + '">' + statusText + '</span></td>';
-        html += '<td>' + date + '</td>';
+        html += '<td data-label="Nombre:"><strong>' + guest.name + '</strong></td>';
+        html += '<td data-label="Personas:">' + guest.passes + '</td>';
+        html += '<td data-label="Estado:"><span class="status-badge ' + guest.status + '">' + statusText + '</span></td>';
+        html += '<td data-label="Fecha:">' + date + '</td>';
         html += '<td>';
         html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem;" onclick="regenerateLink(\'' + guest.id + '\')">🔗 Link</button> ';
         html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem; background: #f44336; color: white;" onclick="deleteGuest(\'' + guest.id + '\', \'' + guest.name + '\')">🗑️</button>';
@@ -267,7 +268,8 @@ function renderGuestsTable() {
 function regenerateLink(guestId) {
     database.ref('guests/' + guestId).once('value').then(function(snapshot) {
         const guest = snapshot.val();
-        const invitationLink = window.location.origin + '/index.html?code=' + guest.invitationCode;
+        const baseUrl = window.location.href.replace('admin.html', 'index.html').split('?')[0];
+        const invitationLink = baseUrl + '?code=' + guest.invitationCode;
         
         document.getElementById('linkText').textContent = invitationLink;
         document.getElementById('generatedLink').classList.add('show');
