@@ -13,81 +13,6 @@
 </head>
 
 <body>
-    <style>
-        /* Estilos para el Pase de Entrada */
-.invitation-pass-container {
-    text-align: center;
-    padding: 40px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.pass-card {
-    background: linear-gradient(135deg, #ffb6c1, #dda0dd);
-    color: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-}
-
-.pass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-}
-
-.pass-emoji {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    animation: bounce 2s infinite;
-}
-
-.pass-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.pass-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 20px 0;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.pass-instruction {
-    font-size: 1rem;
-    opacity: 0.9;
-    margin-top: 20px;
-}
-
-.pass-note {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-top: 10px;
-}
-
-.no-invitation {
-    text-align: center;
-    padding: 60px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.no-invitation-title {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.no-invitation-subtitle {
-    font-size: 1rem;
-    color: #999;
-}
-    </style>
     <!-- Hero Section -->
     <section class="hero">
         <img src="img/fondo.jpeg" alt="Portada" class="hero-video">
@@ -264,44 +189,36 @@
         </div>
     </section>
 
-    <!-- RSVP -->
-    <section class="rsvp">
-        <h2 class="section-title">Tu Pase de Entrada</h2>
-
-        <!-- Cuando HAY invitación -->
-        <div id="invitationInfo" style="display: none;">
-            <div class="invitation-pass-container">
-                <div class="pass-card">
-                    <div class="pass-emoji">🎫</div>
-                    <p class="pass-name" id="guestNameDisplay">Cargando...</p>
-                    <p class="pass-number" id="passesDisplay">Cargando...</p>
-                    <div id="confirmationStatus"></div>
-                    <p class="pass-instruction">Muestra este pase en la entrada</p>
-                    <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
-                </div>
-
-                <!-- Botones de confirmación -->
-                <div id="confirmationSection" style="display: none; margin-top: 20px;">
-                    <button id="confirmBtn" class="btn btn-primary"
-                        style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
-                        ✓ Confirmar Asistencia
-                    </button>
-                    <button id="declineBtn" class="btn"
-                        style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
-                        ✗ No podré asistir
-                    </button>
-                </div>
-            </div>
+<!-- RSVP -->
+<section class="rsvp">
+    <h2 class="section-title">Tu Pase de Entrada</h2>
+    
+    <div id="invitationInfo" class="invitation-pass-container" style="display: none;">
+        <div class="pass-card">
+            <div class="pass-emoji">🎫</div>
+            <p class="pass-name" id="guestNameDisplay"></p>
+            <p class="pass-number" id="passesDisplay"></p>
+            <div id="confirmationStatus" style="margin-top: 20px;"></div>
+            <p class="pass-instruction">Muestra este pase en la entrada</p>
+            <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
         </div>
-
-        <!-- Cuando NO hay invitación -->
-        <div id="noInvitation" style="display: none;">
-            <div class="no-invitation">
-                <p class="no-invitation-title">Esta página requiere una invitación personalizada</p>
-                <p class="no-invitation-subtitle">Contacta a Karol para obtener tu link de invitación</p>
-            </div>
+        <div id="confirmationSection" style="margin-top: 20px; display: none;">
+            <button id="confirmBtn" class="btn btn-primary"
+                style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
+                ✓ Confirmar Asistencia
+            </button>
+            <button id="declineBtn" class="btn"
+                style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
+                ✗ No podré asistir
+            </button>
         </div>
-    </section>
+    </div>
+    
+    <div id="noInvitation" class="no-invitation" style="display: none;">
+        <p class="no-invitation-title">Esta página requiere una invitación personalizada</p>
+        <p class="no-invitation-subtitle">Contacta a Karol para obtener tu link de invitación</p>
+    </div>
+</section>
 
 
     <script>
