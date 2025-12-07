@@ -1,7 +1,6 @@
 // ============================================
 // CONFIGURACIÓN DE FIREBASE
 // ============================================
-// IMPORTANTE: Reemplaza con tus datos de Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyD6JBDB2qZMDHF7J1M3Ow7Ma9AF3WXNGiE",
   authDomain: "xv-anos-karol.firebaseapp.com",
@@ -37,6 +36,7 @@ const database = firebase.database();
 // ============================================
 let allGuests = [];
 let currentFilter = 'all';
+let currentInvitationLink = ''; // Para guardar el link actual
 
 // ============================================
 // FUNCIÓN PARA CODIFICAR INVITACIÓN
@@ -96,9 +96,10 @@ if (createForm) {
             .then(function(ref) {
                 console.log('✅ Invitación guardada exitosamente. ID:', ref.key);
                 
-                // Generar link (corregido para que funcione en cualquier ubicación)
+                // Generar link
                 const baseUrl = window.location.href.replace('admin.html', 'index.html').split('?')[0];
                 const invitationLink = baseUrl + '?code=' + invitationCode;
+                currentInvitationLink = invitationLink; // Guardar para WhatsApp
                 console.log('🔗 Link generado:', invitationLink);
                 
                 // Mostrar link
@@ -150,6 +151,75 @@ function copyLink() {
     } else {
         alert('Copia manualmente el link (tu navegador no soporta copiar automáticamente)');
     }
+}
+
+// ============================================
+// ENVIAR POR WHATSAPP
+// ============================================
+function sendWhatsApp() {
+    const linkText = document.getElementById('linkText').textContent;
+    
+    if (!linkText) {
+        alert('No hay ningún link generado');
+        return;
+    }
+    
+    // Crear mensaje personalizado
+    const mensaje = `🎉 *¡Estás invitado(a) a mis XV Años!* 🎉
+
+Karol Dariana te invita a celebrar este momento tan especial.
+
+📅 *Fecha:* 27 de Diciembre, 2025
+⛪ *Misa:* 1:30 PM - Parroquia de Nuestra Señora del Rosario
+🎊 *Fiesta:* 3:30 PM - El Olvido
+
+🎫 *Tu invitación personalizada:*
+${linkText}
+
+✨ Por favor, ingresa al link y *al final de la página confirma tu asistencia* para poder organizar todo perfectamente.
+
+¡Será un día inolvidable y me encantaría que formes parte de él! 💕`;
+
+    // Codificar el mensaje para URL
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    
+    // Crear link de WhatsApp
+    const whatsappUrl = `https://wa.me/?text=${mensajeCodificado}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+}
+
+// ============================================
+// ENVIAR WHATSAPP PARA UN INVITADO ESPECÍFICO
+// ============================================
+function sendWhatsAppForGuest(guestId) {
+    database.ref('guests/' + guestId).once('value').then(function(snapshot) {
+        const guest = snapshot.val();
+        const baseUrl = window.location.href.replace('admin.html', 'index.html').split('?')[0];
+        const invitationLink = baseUrl + '?code=' + guest.invitationCode;
+        
+        // Crear mensaje personalizado
+        const mensaje = `🎉 *¡Estás invitado(a) a mis XV Años!* 🎉
+
+Karol Dariana te invita a celebrar este momento tan especial.
+
+📅 *Fecha:* 27 de Diciembre, 2025
+⛪ *Misa:* 1:20 PM - Parroquia de Nuestra Señora del Rosario
+🎊 *Fiesta:* 3:30 PM - El Olvido
+
+🎫 *Tu invitación personalizada:*
+${invitationLink}
+
+✨ Por favor, ingresa al link y *al final de la página confirma tu asistencia* para poder organizar todo perfectamente.
+
+¡Será un día inolvidable y me encantaría que formes parte de él! 💕`;
+
+        const mensajeCodificado = encodeURIComponent(mensaje);
+        const whatsappUrl = `https://wa.me/?text=${mensajeCodificado}`;
+        
+        window.open(whatsappUrl, '_blank');
+    });
 }
 
 // ============================================
@@ -251,9 +321,10 @@ function renderGuestsTable() {
         html += '<td data-label="Personas:">' + guest.passes + '</td>';
         html += '<td data-label="Estado:"><span class="status-badge ' + guest.status + '">' + statusText + '</span></td>';
         html += '<td data-label="Fecha:">' + date + '</td>';
-        html += '<td>';
-        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem;" onclick="regenerateLink(\'' + guest.id + '\')">🔗 Link</button> ';
-        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem; background: #f44336; color: white;" onclick="deleteGuest(\'' + guest.id + '\', \'' + guest.name + '\')">🗑️</button>';
+        html += '<td class="action-buttons">';
+        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem; margin: 2px;" onclick="regenerateLink(\'' + guest.id + '\')">🔗 Link</button>';
+        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem; background: #25D366; color: white; margin: 2px;" onclick="sendWhatsAppForGuest(\'' + guest.id + '\')">📱 WhatsApp</button>';
+        html += '<button class="btn" style="padding: 5px 15px; font-size: 0.85rem; background: #f44336; color: white; margin: 2px;" onclick="deleteGuest(\'' + guest.id + '\', \'' + guest.name + '\')">🗑️</button>';
         html += '</td>';
         html += '</tr>';
     });
@@ -271,6 +342,7 @@ function regenerateLink(guestId) {
         const baseUrl = window.location.href.replace('admin.html', 'index.html').split('?')[0];
         const invitationLink = baseUrl + '?code=' + guest.invitationCode;
         
+        currentInvitationLink = invitationLink;
         document.getElementById('linkText').textContent = invitationLink;
         document.getElementById('generatedLink').classList.add('show');
         document.getElementById('generatedLink').scrollIntoView({ behavior: 'smooth', block: 'nearest' });

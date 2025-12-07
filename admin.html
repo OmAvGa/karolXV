@@ -54,7 +54,14 @@
                     <h3 style="margin-bottom: 10px; color: #333;">¡Invitación Generada!</h3>
                     <p style="color: #666; font-size: 0.9rem;">Comparte este link con el invitado:</p>
                     <div class="link-text" id="linkText"></div>
-                    <button class="btn btn-copy" onclick="copyLink()">📋 Copiar Link</button>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-copy" onclick="copyLink()" style="flex: 1; min-width: 150px;">
+                            📋 Copiar Link
+                        </button>
+                        <button class="btn" onclick="sendWhatsApp()" style="flex: 1; min-width: 150px; background: #25D366; color: white;">
+                            📱 Enviar por WhatsApp
+                        </button>
+                    </div>
                 </div>
             </div>
 
