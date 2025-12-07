@@ -1,7 +1,6 @@
 // ============================================
 // CONFIGURACIÓN DE FIREBASE
 // ============================================
-// IMPORTANTE: Debe ser LA MISMA configuración que en admin.js
 const firebaseConfig = {
   apiKey: "AIzaSyD6JBDB2qZMDHF7J1M3Ow7Ma9AF3WXNGiE",
   authDomain: "xv-anos-karol.firebaseapp.com",
@@ -13,22 +12,40 @@ const firebaseConfig = {
   measurementId: "G-VGWB2T9R7W"
 };
 
-// Verificar que Firebase esté cargado
-if (typeof firebase === 'undefined') {
-    console.error('❌ Firebase no está cargado');
-} else {
-    console.log('✅ Firebase disponible');
-}
+// Variable global para la base de datos
+let database;
 
-// Inicializar Firebase
-try {
-    firebase.initializeApp(firebaseConfig);
-    console.log('✅ Firebase inicializado en index.html');
-} catch (error) {
-    console.error('❌ Error al inicializar Firebase:', error);
-}
-
-const database = firebase.database();
+// Inicializar Firebase cuando la página cargue
+window.addEventListener('load', function() {
+    console.log('🚀 Iniciando aplicación...');
+    
+    // Verificar que Firebase esté disponible
+    if (typeof firebase === 'undefined') {
+        console.error('❌ Firebase no está cargado. Asegúrate de incluir los scripts de Firebase en el HTML.');
+        alert('Error: Firebase no está disponible. Verifica la conexión.');
+        return;
+    }
+    
+    // Inicializar Firebase
+    try {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+            console.log('✅ Firebase inicializado correctamente');
+        } else {
+            console.log('✅ Firebase ya estaba inicializado');
+        }
+        
+        database = firebase.database();
+        console.log('✅ Database conectada');
+        
+        // Inicializar la invitación después de que Firebase esté listo
+        initializeInvitation();
+        
+    } catch (error) {
+        console.error('❌ Error al inicializar Firebase:', error);
+        alert('Error al conectar con la base de datos: ' + error.message);
+    }
+});
 
 // ============================================
 // COUNTDOWN TIMER
@@ -62,6 +79,7 @@ function updateCountdown() {
     }
 }
 
+// Iniciar countdown inmediatamente
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
@@ -70,26 +88,11 @@ setInterval(updateCountdown, 1000);
 // ============================================
 let currentGuestId = null;
 
-// Decodificar invitación
-function decodeInvitation(code) {
-    try {
-        const decoded = decodeURIComponent(atob(code));
-        const parts = decoded.split('|');
-        return { 
-            name: parts[0], 
-            passes: parseInt(parts[1]) 
-        };
-    } catch (e) {
-        console.error('Error al decodificar:', e);
-        return null;
-    }
-}
-
 // Obtener código de la URL
 function getInvitationCode() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code') || params.get('codigo');
-    console.log('📋 Código de URL:', code);
+    console.log('📋 Código obtenido de URL:', code);
     return code;
 }
 
@@ -97,235 +100,318 @@ function getInvitationCode() {
 function findGuestByCode(invitationCode) {
     console.log('🔍 Buscando invitado con código:', invitationCode);
     
-    return database.ref('guests').once('value').then(function(snapshot) {
-        const guests = snapshot.val();
-        console.log('📊 Invitados en Firebase:', guests);
-        
-        if (!guests) {
-            console.log('❌ No hay invitados en la base de datos');
-            return null;
-        }
-        
-        for (let guestId in guests) {
-            if (guests[guestId].invitationCode === invitationCode) {
-                console.log('✅ Invitado encontrado:', guests[guestId]);
-                return { 
-                    id: guestId, 
-                    ...guests[guestId] 
-                };
+    return database.ref('guests').once('value')
+        .then(function(snapshot) {
+            const guests = snapshot.val();
+            console.log('📊 Total de invitados en DB:', guests ? Object.keys(guests).length : 0);
+            
+            if (!guests) {
+                console.log('❌ No hay invitados en la base de datos');
+                return null;
             }
-        }
-        
-        console.log('❌ No se encontró invitado con ese código');
-        return null;
-    }).catch(function(error) {
-        console.error('❌ Error al buscar en Firebase:', error);
-        return null;
-    });
+            
+            // Buscar el invitado con el código
+            for (let guestId in guests) {
+                const guest = guests[guestId];
+                console.log('Comparando:', guest.invitationCode, 'con', invitationCode);
+                
+                if (guest.invitationCode === invitationCode) {
+                    console.log('✅ ¡Invitado encontrado!', guest);
+                    return { 
+                        id: guestId, 
+                        ...guest 
+                    };
+                }
+            }
+            
+            console.log('❌ No se encontró invitado con ese código');
+            return null;
+        })
+        .catch(function(error) {
+            console.error('❌ Error al buscar en Firebase:', error);
+            return null;
+        });
 }
 
-// Inicializar la invitación
-function initializeInvitation() {
-    console.log('🚀 Inicializando invitación...');
+// Mostrar información del invitado
+function showGuestInfo(guest) {
+    console.log('📋 Mostrando información del invitado:', guest);
     
-    const code = getInvitationCode();
+    const invitationInfoEl = document.getElementById('invitationInfo');
+    const guestNameEl = document.getElementById('guestNameDisplay');
+    const passesEl = document.getElementById('passesDisplay');
+    const noInvitationEl = document.getElementById('noInvitation');
     
-    if (!code) {
-        console.log('❌ No hay código en la URL');
-        const noInvitationEl = document.getElementById('noInvitation');
-        if (noInvitationEl) {
-            noInvitationEl.style.display = 'block';
-        }
-        return;
+    // Ocultar mensaje de "no invitación"
+    if (noInvitationEl) {
+        noInvitationEl.style.display = 'none';
     }
     
-    // Buscar invitado en Firebase
-    findGuestByCode(code).then(function(guest) {
-        if (!guest) {
-            console.log('❌ Invitado no encontrado');
-            const noInvitationEl = document.getElementById('noInvitation');
-            if (noInvitationEl) {
-                noInvitationEl.style.display = 'block';
-            }
-            return;
-        }
-        
-        console.log('✅ Mostrando información del invitado');
-        currentGuestId = guest.id;
-        
-        // Mostrar información del pase
-        const invitationInfoEl = document.getElementById('invitationInfo');
-        const guestNameEl = document.getElementById('guestNameDisplay');
-        const passesEl = document.getElementById('passesDisplay');
-        
-        if (invitationInfoEl) invitationInfoEl.style.display = 'block';
-        if (guestNameEl) guestNameEl.textContent = guest.name;
-        if (passesEl) {
-            const personasText = guest.passes === 1 ? 'Persona' : 'Personas';
-            passesEl.textContent = guest.passes + ' ' + personasText;
-        }
-        
-        // Mostrar estado actual
-        updateConfirmationStatus(guest.status);
-    });
+    // Mostrar información del pase
+    if (invitationInfoEl) {
+        invitationInfoEl.style.display = 'block';
+    }
+    
+    if (guestNameEl) {
+        guestNameEl.textContent = guest.name;
+        console.log('✅ Nombre mostrado:', guest.name);
+    }
+    
+    if (passesEl) {
+        const personasText = guest.passes === 1 ? 'Persona' : 'Personas';
+        passesEl.textContent = guest.passes + ' ' + personasText;
+        console.log('✅ Pases mostrados:', guest.passes);
+    }
+    
+    // Guardar ID del invitado
+    currentGuestId = guest.id;
+    
+    // Mostrar estado actual
+    updateConfirmationStatus(guest.status || 'pending');
+}
+
+// Mostrar mensaje de invitación no válida
+function showNoInvitation() {
+    console.log('❌ Mostrando mensaje de invitación no válida');
+    
+    const invitationInfoEl = document.getElementById('invitationInfo');
+    const noInvitationEl = document.getElementById('noInvitation');
+    
+    if (invitationInfoEl) {
+        invitationInfoEl.style.display = 'none';
+    }
+    
+    if (noInvitationEl) {
+        noInvitationEl.style.display = 'block';
+    }
 }
 
 // Actualizar estado de confirmación
 function updateConfirmationStatus(status) {
-    console.log('📝 Actualizando estado:', status);
+    console.log('📝 Actualizando estado de confirmación:', status);
     
     const statusContainer = document.getElementById('confirmationStatus');
     const confirmSection = document.getElementById('confirmationSection');
     
-    if (!statusContainer || !confirmSection) {
-        console.error('❌ No se encontraron los elementos de confirmación');
+    if (!statusContainer) {
+        console.error('❌ No se encontró confirmationStatus');
+        return;
+    }
+    
+    if (!confirmSection) {
+        console.error('❌ No se encontró confirmationSection');
         return;
     }
     
     if (status === 'pending') {
+        console.log('⏳ Estado: Pendiente - Mostrando botones');
         statusContainer.innerHTML = '';
         confirmSection.style.display = 'block';
     } else if (status === 'confirmed') {
-        statusContainer.innerHTML = '<div style="background: #d4f4dd; color: #2d6a3e; padding: 15px; border-radius: 10px;">' +
-            '<strong>✓ Asistencia Confirmada</strong>' +
-            '<p style="margin-top: 5px; font-size: 0.9rem;">¡Nos vemos el 27 de Diciembre!</p>' +
+        console.log('✅ Estado: Confirmado');
+        statusContainer.innerHTML = 
+            '<div style="background: #d4f4dd; color: #2d6a3e; padding: 15px; border-radius: 10px; margin-bottom: 10px;">' +
+            '<strong style="font-size: 1.2rem;">✓ Asistencia Confirmada</strong>' +
+            '<p style="margin-top: 5px; font-size: 0.95rem;">¡Nos vemos el 27 de Diciembre!</p>' +
             '</div>';
         confirmSection.style.display = 'none';
     } else if (status === 'declined') {
-        statusContainer.innerHTML = '<div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 10px;">' +
-            '<strong>✗ No podrás asistir</strong>' +
-            '<p style="margin-top: 5px; font-size: 0.9rem;">Gracias por informarnos</p>' +
+        console.log('❌ Estado: Rechazado');
+        statusContainer.innerHTML = 
+            '<div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 10px; margin-bottom: 10px;">' +
+            '<strong style="font-size: 1.2rem;">✗ No podrás asistir</strong>' +
+            '<p style="margin-top: 5px; font-size: 0.95rem;">Gracias por informarnos</p>' +
             '</div>';
         confirmSection.style.display = 'none';
     }
+}
+
+// Inicializar la invitación
+function initializeInvitation() {
+    console.log('🎯 Iniciando proceso de invitación...');
+    
+    const code = getInvitationCode();
+    
+    if (!code) {
+        console.log('⚠️ No hay código en la URL');
+        showNoInvitation();
+        return;
+    }
+    
+    console.log('✅ Código encontrado, buscando invitado...');
+    
+    // Buscar invitado en Firebase
+    findGuestByCode(code)
+        .then(function(guest) {
+            if (!guest) {
+                console.log('❌ Invitado no encontrado');
+                showNoInvitation();
+                return;
+            }
+            
+            console.log('✅ Invitado encontrado, mostrando información');
+            showGuestInfo(guest);
+        })
+        .catch(function(error) {
+            console.error('❌ Error al inicializar invitación:', error);
+            showNoInvitation();
+        });
 }
 
 // ============================================
 // BOTONES DE CONFIRMACIÓN
 // ============================================
 
-// Confirmar asistencia
-const confirmBtn = document.getElementById('confirmBtn');
-if (confirmBtn) {
-    confirmBtn.addEventListener('click', function() {
-        if (!currentGuestId) {
-            console.error('❌ No hay ID de invitado');
-            return;
-        }
+// Función para confirmar asistencia
+function confirmAttendance() {
+    if (!currentGuestId) {
+        console.error('❌ No hay ID de invitado');
+        alert('Error: No se pudo identificar la invitación');
+        return;
+    }
+    
+    if (!database) {
+        console.error('❌ Database no está disponible');
+        alert('Error: No hay conexión con la base de datos');
+        return;
+    }
+    
+    if (confirm('¿Confirmas tu asistencia al evento?')) {
+        console.log('✅ Confirmando asistencia para:', currentGuestId);
         
-        if (confirm('¿Confirmas tu asistencia al evento?')) {
-            console.log('✅ Confirmando asistencia...');
-            
-            database.ref('guests/' + currentGuestId).update({
-                status: 'confirmed',
-                confirmedAt: Date.now()
-            }).then(function() {
-                console.log('✅ Asistencia confirmada en Firebase');
-                updateConfirmationStatus('confirmed');
-                alert('¡Gracias por confirmar tu asistencia! 🎉');
-            }).catch(function(error) {
-                console.error('❌ Error al confirmar:', error);
-                alert('Hubo un error al confirmar. Por favor intenta de nuevo.');
-            });
-        }
-    });
-} else {
-    console.log('⚠️ No se encontró el botón de confirmar');
+        database.ref('guests/' + currentGuestId).update({
+            status: 'confirmed',
+            confirmedAt: Date.now()
+        })
+        .then(function() {
+            console.log('✅ Asistencia confirmada exitosamente');
+            updateConfirmationStatus('confirmed');
+            alert('¡Gracias por confirmar tu asistencia! 🎉');
+        })
+        .catch(function(error) {
+            console.error('❌ Error al confirmar:', error);
+            alert('Hubo un error al confirmar. Por favor intenta de nuevo.');
+        });
+    }
 }
 
-// Rechazar asistencia
-const declineBtn = document.getElementById('declineBtn');
-if (declineBtn) {
-    declineBtn.addEventListener('click', function() {
-        if (!currentGuestId) {
-            console.error('❌ No hay ID de invitado');
-            return;
-        }
+// Función para rechazar asistencia
+function declineAttendance() {
+    if (!currentGuestId) {
+        console.error('❌ No hay ID de invitado');
+        alert('Error: No se pudo identificar la invitación');
+        return;
+    }
+    
+    if (!database) {
+        console.error('❌ Database no está disponible');
+        alert('Error: No hay conexión con la base de datos');
+        return;
+    }
+    
+    if (confirm('¿Estás seguro de que no podrás asistir?')) {
+        console.log('📝 Rechazando asistencia para:', currentGuestId);
         
-        if (confirm('¿Estás seguro de que no podrás asistir?')) {
-            console.log('📝 Rechazando asistencia...');
-            
-            database.ref('guests/' + currentGuestId).update({
-                status: 'declined',
-                declinedAt: Date.now()
-            }).then(function() {
-                console.log('✅ Rechazo registrado en Firebase');
-                updateConfirmationStatus('declined');
-                alert('Gracias por informarnos.');
-            }).catch(function(error) {
-                console.error('❌ Error al rechazar:', error);
-                alert('Hubo un error. Por favor intenta de nuevo.');
-            });
-        }
-    });
-} else {
-    console.log('⚠️ No se encontró el botón de rechazar');
+        database.ref('guests/' + currentGuestId).update({
+            status: 'declined',
+            declinedAt: Date.now()
+        })
+        .then(function() {
+            console.log('✅ Rechazo registrado exitosamente');
+            updateConfirmationStatus('declined');
+            alert('Gracias por informarnos.');
+        })
+        .catch(function(error) {
+            console.error('❌ Error al rechazar:', error);
+            alert('Hubo un error. Por favor intenta de nuevo.');
+        });
+    }
 }
 
-// ============================================
-// INICIALIZACIÓN
-// ============================================
+// Event listeners para los botones
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 DOM cargado, inicializando...');
-    initializeInvitation();
+    console.log('📄 DOM completamente cargado');
+    
+    const confirmBtn = document.getElementById('confirmBtn');
+    const declineBtn = document.getElementById('declineBtn');
+    
+    if (confirmBtn) {
+        console.log('✅ Botón confirmar encontrado');
+        confirmBtn.addEventListener('click', confirmAttendance);
+    } else {
+        console.log('⚠️ Botón confirmar NO encontrado');
+    }
+    
+    if (declineBtn) {
+        console.log('✅ Botón rechazar encontrado');
+        declineBtn.addEventListener('click', declineAttendance);
+    } else {
+        console.log('⚠️ Botón rechazar NO encontrado');
+    }
 });
 
 // ============================================
 // GALERÍA (Lightbox)
 // ============================================
-const images = document.querySelectorAll(".gallery-item img");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll(".gallery-item img");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
 
-if (images && lightbox && lightboxImg) {
-    images.forEach(function(img) {
-        img.addEventListener("click", function() {
-            lightbox.classList.add("active");
-            lightboxImg.src = img.src;
+    if (images && lightbox && lightboxImg) {
+        images.forEach(function(img) {
+            img.addEventListener("click", function() {
+                lightbox.classList.add("active");
+                lightboxImg.src = img.src;
+            });
         });
-    });
 
-    lightbox.addEventListener("click", function() {
-        lightbox.classList.remove("active");
-    });
-}
+        lightbox.addEventListener("click", function() {
+            lightbox.classList.remove("active");
+        });
+    }
+});
 
 // ============================================
 // SMOOTH SCROLL
 // ============================================
-document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 });
 
 // ============================================
 // ANIMATION ON SCROLL
 // ============================================
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
 
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('section').forEach(function(section) {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        observer.observe(section);
     });
-}, observerOptions);
-
-document.querySelectorAll('section').forEach(function(section) {
-    section.style.opacity = '0';
-    section.style.transform = 'translateY(30px)';
-    section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(section);
 });
