@@ -192,29 +192,39 @@
     <!-- RSVP -->
     <section class="rsvp">
         <h2 class="section-title">Tu Pase de Entrada</h2>
-        <div id="invitationInfo" class="invitation-pass-container" style="display: none;">
-            <div class="pass-card">
-                <div class="pass-emoji">🎫</div>
-                <p class="pass-name" id="guestNameDisplay"></p>
-                <p class="pass-number" id="passesDisplay"></p>
-                <div id="confirmationStatus" style="margin-top: 20px;"></div>
-                <p class="pass-instruction">Muestra este pase en la entrada</p>
-                <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
-            </div>
-            <div id="confirmationSection" style="margin-top: 20px; display: none;">
-                <button id="confirmBtn" class="btn btn-primary"
-                    style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
-                    ✓ Confirmar Asistencia
-                </button>
-                <button id="declineBtn" class="btn"
-                    style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
-                    ✗ No podré asistir
-                </button>
+
+        <!-- Cuando HAY invitación -->
+        <div id="invitationInfo" style="display: none;">
+            <div class="invitation-pass-container">
+                <div class="pass-card">
+                    <div class="pass-emoji">🎫</div>
+                    <p class="pass-name" id="guestNameDisplay">Cargando...</p>
+                    <p class="pass-number" id="passesDisplay">Cargando...</p>
+                    <div id="confirmationStatus"></div>
+                    <p class="pass-instruction">Muestra este pase en la entrada</p>
+                    <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
+                </div>
+
+                <!-- Botones de confirmación -->
+                <div id="confirmationSection" style="display: none; margin-top: 20px;">
+                    <button id="confirmBtn" class="btn btn-primary"
+                        style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
+                        ✓ Confirmar Asistencia
+                    </button>
+                    <button id="declineBtn" class="btn"
+                        style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
+                        ✗ No podré asistir
+                    </button>
+                </div>
             </div>
         </div>
-        <div id="noInvitation" class="no-invitation" style="display: none;">
-            <p class="no-invitation-title">Esta página requiere una invitación personalizada</p>
-            <p class="no-invitation-subtitle">Contacta a Karol para obtener tu link de invitación</p>
+
+        <!-- Cuando NO hay invitación -->
+        <div id="noInvitation" style="display: none;">
+            <div class="no-invitation">
+                <p class="no-invitation-title">Esta página requiere una invitación personalizada</p>
+                <p class="no-invitation-subtitle">Contacta a Karol para obtener tu link de invitación</p>
+            </div>
         </div>
     </section>
 
