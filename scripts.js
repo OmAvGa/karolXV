@@ -1,3 +1,20 @@
+// Configuración de Firebase (DEBE SER LA MISMA QUE EN admin.js)
+const firebaseConfig = {
+  apiKey: "AIzaSyD6JBDB2qZMDHF7J1M3Ow7Ma9AF3WXNGiE",
+  authDomain: "xv-anos-karol.firebaseapp.com",
+  databaseURL: "https://xv-anos-karol-default-rtdb.firebaseio.com",
+  projectId: "xv-anos-karol",
+  storageBucket: "xv-anos-karol.firebasestorage.app",
+  messagingSenderId: "853844382172",
+  appId: "1:853844382172:web:a86e9d4cfbc0cecc8f7f19",
+  measurementId: "G-VGWB2T9R7W"
+};
+
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
 // Countdown Timer
 const eventDate = new Date('2025-12-27T15:00:00').getTime();
 
@@ -23,12 +40,7 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// Función simple de encriptación/desencriptación
-function encodeInvitation(name, passes) {
-    const data = `${name}|${passes}`;
-    return btoa(encodeURIComponent(data));
-}
-
+// Función de decodificación
 function decodeInvitation(code) {
     try {
         const decoded = decodeURIComponent(atob(code));
@@ -45,72 +57,134 @@ function getURLParams() {
     const code = params.get('code') || params.get('codigo');
     
     if (code) {
-        // Si hay un código, decodificarlo
-        return decodeInvitation(code);
+        return { code, ...decodeInvitation(code) };
     }
     
-    // Fallback al método anterior (por compatibilidad)
-    return {
-        name: params.get('name') || params.get('nombre'),
-        passes: parseInt(params.get('passes') || params.get('pases')) || 1
-    };
+    return null;
 }
 
-// Inicializar pase de entrada con datos de la URL
-function initializeInvitation() {
-    const invitation = getURLParams();
+let currentGuestId = null;
+
+// Buscar invitado en Firebase por código
+async function findGuestByCode(invitationCode) {
+    try {
+        const snapshot = await database.ref('guests').once('value');
+        const guests = snapshot.val();
+        
+        if (!guests) return null;
+        
+        for (let guestId in guests) {
+            if (guests[guestId].invitationCode === invitationCode) {
+                return { id: guestId, ...guests[guestId] };
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Error al buscar invitado:', error);
+        return null;
+    }
+}
+
+// Inicializar pase de entrada
+async function initializeInvitation() {
+    const params = getURLParams();
     
-    if (invitation.name) {
-        // Mostrar el pase de entrada
-        document.getElementById('invitationInfo').style.display = 'block';
-        document.getElementById('guestNameDisplay').textContent = invitation.name;
-        document.getElementById('passesDisplay').textContent = `${invitation.passes} ${invitation.passes === 1 ? 'Persona' : 'Personas'}`;
-    } else {
-        // Mostrar mensaje si no hay invitación
+    if (!params || !params.code) {
         document.getElementById('noInvitation').style.display = 'block';
+        return;
+    }
+    
+    // Buscar invitado en Firebase
+    const guest = await findGuestByCode(params.code);
+    
+    if (!guest) {
+        document.getElementById('noInvitation').style.display = 'block';
+        return;
+    }
+    
+    currentGuestId = guest.id;
+    
+    // Mostrar información del pase
+    document.getElementById('invitationInfo').style.display = 'block';
+    document.getElementById('guestNameDisplay').textContent = guest.name;
+    document.getElementById('passesDisplay').textContent = `${guest.passes} ${guest.passes === 1 ? 'Persona' : 'Personas'}`;
+    
+    // Mostrar estado actual
+    updateConfirmationStatus(guest.status);
+}
+
+// Actualizar estado de confirmación
+function updateConfirmationStatus(status) {
+    const statusContainer = document.getElementById('confirmationStatus');
+    const confirmSection = document.getElementById('confirmationSection');
+    
+    if (status === 'pending') {
+        statusContainer.innerHTML = '';
+        confirmSection.style.display = 'block';
+    } else if (status === 'confirmed') {
+        statusContainer.innerHTML = `
+            <div style="background: #d4f4dd; color: #2d6a3e; padding: 15px; border-radius: 10px;">
+                <strong>✓ Asistencia Confirmada</strong>
+                <p style="margin-top: 5px; font-size: 0.9rem;">¡Nos vemos el 27 de Diciembre!</p>
+            </div>
+        `;
+        confirmSection.style.display = 'none';
+    } else if (status === 'declined') {
+        statusContainer.innerHTML = `
+            <div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 10px;">
+                <strong>✗ No podrás asistir</strong>
+                <p style="margin-top: 5px; font-size: 0.9rem;">Gracias por informarnos</p>
+            </div>
+        `;
+        confirmSection.style.display = 'none';
     }
 }
 
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', initializeInvitation);
-
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', initializeInvitation);
-
-// Guestbook Form
-const messages = [];
-
-document.getElementById('guestbookForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+// Confirmar asistencia
+document.getElementById('confirmBtn')?.addEventListener('click', async () => {
+    if (!currentGuestId) return;
     
-    const name = document.getElementById('guestName').value;
-    const message = document.getElementById('message').value;
-    const date = new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
-    
-    const messageObj = { name, message, date };
-    messages.unshift(messageObj);
-    
-    // Add message to container
-    const messagesContainer = document.getElementById('messagesContainer');
-    const messageCard = document.createElement('div');
-    messageCard.className = 'message-card';
-    messageCard.style.animation = 'fadeInUp 0.5s ease-out';
-    messageCard.innerHTML = `
-        <div class="message-header">
-            <span class="message-name">${name}</span>
-            <span class="message-date">${date}</span>
-        </div>
-        <div class="message-text">${message}</div>
-    `;
-    
-    messagesContainer.insertBefore(messageCard, messagesContainer.firstChild);
-    
-    // Reset form
-    this.reset();
-    
-    // Show confirmation
-    alert('¡Gracias por tu mensaje! Ha sido publicado.');
+    if (confirm('¿Confirmas tu asistencia al evento?')) {
+        try {
+            await database.ref('guests/' + currentGuestId).update({
+                status: 'confirmed',
+                confirmedAt: Date.now()
+            });
+            
+            updateConfirmationStatus('confirmed');
+            alert('¡Gracias por confirmar tu asistencia! 🎉');
+            
+        } catch (error) {
+            console.error('Error al confirmar:', error);
+            alert('Hubo un error al confirmar. Por favor intenta de nuevo.');
+        }
+    }
 });
+
+// Rechazar asistencia
+document.getElementById('declineBtn')?.addEventListener('click', async () => {
+    if (!currentGuestId) return;
+    
+    if (confirm('¿Estás seguro de que no podrás asistir?')) {
+        try {
+            await database.ref('guests/' + currentGuestId).update({
+                status: 'declined',
+                declinedAt: Date.now()
+            });
+            
+            updateConfirmationStatus('declined');
+            alert('Gracias por informarnos.');
+            
+        } catch (error) {
+            console.error('Error al rechazar:', error);
+            alert('Hubo un error. Por favor intenta de nuevo.');
+        }
+    }
+});
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', initializeInvitation);
 
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

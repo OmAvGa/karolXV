@@ -55,31 +55,50 @@
     <!-- Our Story -->
     <section class="story">
         <h2 class="section-title">Mi Historia</h2>
+
+        <!-- BLOQUE 1 -->
         <div class="story-content">
             <div>
                 <img src="img/historia 1.jpeg" alt="Historia" class="story-image">
             </div>
-            <div class="story-text">
-                <p>Hace quince años comenzó una historia llena de amor, sueños y esperanza. Cada momento ha sido un
-                    regalo, cada sonrisa una bendición.</p>
-                <p style="margin-top: 20px;">Hoy celebramos no solo un cumpleaños, sino el inicio de una nueva etapa
-                    llena de promesas y aventuras. Gracias por ser parte de este viaje maravilloso.</p>
-                <p style="margin-top: 20px;">Los invito a compartir conmigo este día tan especial, rodeados de amor,
-                    música y alegría.</p>
+            <div class="story-text small-text">
+                <p>Hace quince años comenzó una historia llena de amor, sueños y esperanza.</p>
+                <p>Hoy celebra un nuevo capítulo, rodeada de quienes más ama.</p>
             </div>
         </div>
-        <div class="story-content" style="direction: rtl;">
-            <div style="direction: ltr;">
+
+        <!-- BLOQUE 2 (invertido) -->
+        <div class="story-content reverse">
+            <div>
                 <img src="img/historia 2.jpeg" alt="Familia" class="story-image">
             </div>
-            <div class="story-text" style="direction: ltr;">
-                <p>Con el apoyo incondicional de mi familia, he crecido rodeada de valores, cariño y las mejores
-                    enseñanzas.</p>
-                <p style="margin-top: 20px;">Este día representa el amor de quienes me han acompañado en cada paso, y
-                    quiero celebrarlo con todos ustedes, las personas que hacen mi vida más especial.</p>
+            <div class="story-text small-text">
+                <p>La familia ha sido su mayor fuerza y apoyo.</p>
+                <p>Este día es para compartir, agradecer y celebrar juntos.</p>
+            </div>
+        </div>
+
+        <!-- BLOQUE 3 (NUEVO) -->
+        <div class="story-content">
+            <div>
+                <img src="img/historia 3.jpeg" alt="Recuerdo especial" class="story-image">
+            </div>
+            <div class="story-text small-text">
+                <p>Cada recuerdo construido ha dejado una huella imborrable.</p>
+            </div>
+        </div>
+
+        <!-- BLOQUE 4 (NUEVO - invertido) -->
+        <div class="story-content reverse">
+            <div>
+                <img src="img/historia 4.jpeg" alt="Momento especial" class="story-image">
+            </div>
+            <div class="story-text small-text">
+                <p>Hoy todo florece en una celebración inolvidable.</p>
             </div>
         </div>
     </section>
+
 
     <!-- Gallery -->
     <section class="gallery">
@@ -183,10 +202,12 @@
                 <p class="pass-note">Guarda este link para acceder en cualquier momento</p>
             </div>
             <div id="confirmationSection" style="margin-top: 20px; display: none;">
-                <button id="confirmBtn" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
+                <button id="confirmBtn" class="btn btn-primary"
+                    style="width: 100%; padding: 15px; font-size: 1.1rem; margin-bottom: 10px;">
                     ✓ Confirmar Asistencia
                 </button>
-                <button id="declineBtn" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
+                <button id="declineBtn" class="btn"
+                    style="width: 100%; padding: 15px; font-size: 1.1rem; background: #e0e0e0; color: #666;">
                     ✗ No podré asistir
                 </button>
             </div>
@@ -196,179 +217,7 @@
             <p class="no-invitation-subtitle">Contacta a Karol para obtener tu link de invitación</p>
         </div>
     </section>
-    <style>
-        /* Estilos para el Pase de Entrada */
-        .invitation-pass-container {
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
 
-        .pass-card {
-            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .pass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .pass-emoji {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
-        }
-
-        .pass-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .pass-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .pass-instruction {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-top: 20px;
-        }
-
-        .pass-note {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-top: 10px;
-        }
-
-        .pass-info {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 15px;
-            border-left: 4px solid #d4a5d4;
-        }
-
-        .info-title {
-            font-size: 1.1rem;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .info-list {
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.8;
-            text-align: left;
-        }
-
-        .no-invitation {
-            text-align: center;
-            padding: 60px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .no-invitation-title {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .no-invitation-subtitle {
-            font-size: 1rem;
-            color: #999;
-        }
-
-        /* Responsive para el pase */
-        @media (max-width: 768px) {
-            .invitation-pass-container {
-                padding: 20px 10px;
-            }
-
-            .pass-card {
-                padding: 30px 20px;
-            }
-
-            .pass-emoji {
-                font-size: 2.5rem;
-            }
-
-            .pass-name {
-                font-size: 1.4rem;
-            }
-
-            .pass-number {
-                font-size: 2rem;
-            }
-
-            .pass-instruction {
-                font-size: 0.95rem;
-            }
-
-            .pass-note {
-                font-size: 0.85rem;
-            }
-
-            .pass-info {
-                padding: 15px;
-                margin-top: 20px;
-            }
-
-            .info-title {
-                font-size: 1rem;
-            }
-
-            .info-list {
-                font-size: 0.9rem;
-                line-height: 1.6;
-            }
-
-            .no-invitation {
-                padding: 40px 20px;
-            }
-
-            .no-invitation-title {
-                font-size: 1.1rem;
-            }
-
-            .no-invitation-subtitle {
-                font-size: 0.95rem;
-            }
-        }
-
-        @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-10px);
-            }
-
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-    </style>
 
     <script>
         const images = document.querySelectorAll(".gallery-item img");
