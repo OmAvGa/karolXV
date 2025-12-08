@@ -50,7 +50,7 @@ window.addEventListener('load', function() {
 // ============================================
 // COUNTDOWN TIMER
 // ============================================
-const eventDate = new Date('2025-12-27T15:00:00').getTime();
+const eventDate = new Date('2025-12-27T14:00:00').getTime();
 
 function updateCountdown() {
     const now = new Date().getTime();

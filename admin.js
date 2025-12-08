@@ -170,7 +170,7 @@ function sendWhatsApp() {
 Karol Dariana te invita a celebrar este momento tan especial.
 
 📅 *Fecha:* 27 de Diciembre, 2025
-⛪ *Misa:* 1:30 PM - Parroquia de Nuestra Señora del Rosario
+⛪ *Misa:* 2:00 PM - Parroquia de Nuestra Señora del Rosario
 🎊 *Fiesta:* 3:30 PM - El Olvido
 
 🎫 *Tu invitación personalizada:*
@@ -205,7 +205,7 @@ function sendWhatsAppForGuest(guestId) {
 Karol Dariana te invita a celebrar este momento tan especial.
 
 📅 *Fecha:* 27 de Diciembre, 2025
-⛪ *Misa:* 1:30 PM - Parroquia de Nuestra Señora del Rosario
+⛪ *Misa:* 2:00 PM - Parroquia de Nuestra Señora del Rosario
 🎊 *Fiesta:* 3:30 PM - El Olvido
 
 🎫 *Tu invitación personalizada:*
